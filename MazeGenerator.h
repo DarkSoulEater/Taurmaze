@@ -2,7 +2,7 @@
 // Created by asmekal on 01.05.2021.
 //
 
-//to generate maze use FillMaze(0, 0)
+//to create maze use GetMaze(length, width)
 
 #include <iostream>
 #include <vector>
@@ -58,4 +58,10 @@ void PrintMaze(std::vector<std::vector<int>>& maze) {
         }
         std::cout << '\n';
     }
+}
+
+std::vector<std::vector<int>> GetMaze(int length, int width) {
+    std::vector<std::vector<int>> maze(length, std::vector<int>(width));
+    FillMaze(maze, 0, 0);
+    return maze;
 }
