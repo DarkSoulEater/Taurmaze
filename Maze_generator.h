@@ -18,7 +18,7 @@ bool IsFree(std::vector<std::vector<int>>& maze, int x, int y) {
     return x >= 0 && y >= 0 && x < maze.size() && y < maze[0].size() && !maze[x][y];
 }
 
-bool can_go(std::vector<std::vector<int>>& maze, int x, int y) {
+bool CanGo(std::vector<std::vector<int>>& maze, int x, int y) {
     return x < 0 || y < 0 || x >= maze.size() || y >= maze[0].size() || !maze[x][y];
 }
 
@@ -26,10 +26,10 @@ bool ArePointAndBordersFree(std::vector<std::vector<int>>& maze, int x, int y, i
     //check point
     if (!IsFree(maze, x, y)) return false;
     //check borders
-    if (!can_go(maze, x - 1, y) && x - 1 != px) return false;
-    if (!can_go(maze, x, y - 1) && y - 1 != py) return false;
-    if (!can_go(maze, x + 1, y) && x + 1 != px) return false;
-    if (!can_go(maze, x, y  + 1) && y + 1 != py) return false;
+    if (!CanGo(maze, x - 1, y) && x - 1 != px) return false;
+    if (!CanGo(maze, x, y - 1) && y - 1 != py) return false;
+    if (!CanGo(maze, x + 1, y) && x + 1 != px) return false;
+    if (!CanGo(maze, x, y + 1) && y + 1 != py) return false;
     return true;
 }
 
