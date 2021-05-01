@@ -6,8 +6,7 @@
 
 #include <iostream>
 #include <vector>
-#include <ctime>
-#include <cstdlib>
+#include <random>
 
 #ifndef TAURMAZE_MAZE_GENERATOR_H
 #define TAURMAZE_MAZE_GENERATOR_H
@@ -33,6 +32,11 @@ bool ArePointAndBordersFree(std::vector<std::vector<int>>& maze, int x, int y, i
     return true;
 }
 
+//for random
+std::random_device rng;
+std::mt19937 gen(rng());
+std::uniform_int_distribution<> dist(0, 3);
+
 void FillMaze(std::vector<std::vector<int>>& maze, int x, int y) {
     maze[x][y] = 1;
     std::vector<std::pair<int, int>> buffer;
@@ -45,7 +49,7 @@ void FillMaze(std::vector<std::vector<int>>& maze, int x, int y) {
         if (ArePointAndBordersFree(maze, x, y + 1, x, y)) buffer.emplace_back(std::pair(x, y + 1));
         if (buffer.empty()) continue;
         //choose random point
-        int random_point = rand() % buffer.size();
+        int random_point = dist(gen) % static_cast<int>(buffer.size());
         FillMaze(maze, buffer[random_point].first, buffer[random_point].second);
     } while (!buffer.empty());
 }
