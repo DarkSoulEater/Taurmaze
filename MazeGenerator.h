@@ -43,10 +43,10 @@ void FillMaze(std::vector<std::vector<int>>& maze, int x, int y) {
     do {
         buffer.clear();
         //check if we can go
-        if (ArePointAndBordersFree(maze, x - 1, y, x, y)) buffer.emplace_back(std::pair(x - 1, y));
-        if (ArePointAndBordersFree(maze, x, y - 1, x, y)) buffer.emplace_back(std::pair(x, y - 1));
         if (ArePointAndBordersFree(maze, x + 1, y, x, y)) buffer.emplace_back(std::pair(x + 1, y));
         if (ArePointAndBordersFree(maze, x, y + 1, x, y)) buffer.emplace_back(std::pair(x, y + 1));
+        if (ArePointAndBordersFree(maze, x - 1, y, x, y)) buffer.emplace_back(std::pair(x - 1, y));
+        if (ArePointAndBordersFree(maze, x, y - 1, x, y)) buffer.emplace_back(std::pair(x, y - 1));
         if (buffer.empty()) continue;
         //choose random point
         int random_point = dist(gen) % static_cast<int>(buffer.size());
