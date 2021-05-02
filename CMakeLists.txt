@@ -3,4 +3,8 @@ project(Taurmaze)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Taurmaze main.cpp Maze.h)
+add_executable(Taurmaze main.cpp Maze.h Core.cpp Core.h)
+
+find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
+
+target_link_libraries(Taurmaze sfml-graphics sfml-audio)

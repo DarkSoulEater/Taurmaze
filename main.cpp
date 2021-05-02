@@ -1,7 +1,7 @@
-#include "Maze.h"
+#include "Core.h"
 
 int main() {
-    Maze maze(10, 10);
-    maze.Print();
-    return 0;
+  Core taurmaze;
+  taurmaze.Run();
+  return EXIT_SUCCESS;
 }
