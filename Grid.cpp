@@ -15,7 +15,7 @@ void Grid::Build(sf::RenderWindow& window) {
 
         std::string s = std::to_string((x - Cx) / dx);
         sf::Font temp_font;
-        temp_font.loadFromFile("/Users/elizavetamanzula/Downloads/19676.ttf");
+        temp_font.loadFromFile("../assets/texture/19676.ttf");
         sf::Text num(s, temp_font, 40);
         num.setColor(color);
         num.move(x - 8, 0);
@@ -29,7 +29,7 @@ void Grid::Build(sf::RenderWindow& window) {
 
         std::string s = std::to_string((x - Cx) / dx);
         sf::Font temp_font;
-        temp_font.loadFromFile("/Users/elizavetamanzula/Downloads/19676.ttf");
+        temp_font.loadFromFile("../assets/texture/19676.ttf");
         sf::Text num(s, temp_font, 40);
         num.setColor(color);
         num.move(x - 8, 0);
@@ -43,7 +43,7 @@ void Grid::Build(sf::RenderWindow& window) {
 
         std::string s = std::to_string(-(y - Cy) / dy);
         sf::Font temp_font;
-        temp_font.loadFromFile("/Users/elizavetamanzula/Downloads/19676.ttf");
+        temp_font.loadFromFile("../assets/texture/19676.ttf");
         sf::Text num(s, temp_font, 40);
         num.setColor(color);
         num.move(9, y - 15);
@@ -57,7 +57,7 @@ void Grid::Build(sf::RenderWindow& window) {
 
         std::string s = std::to_string(-(y - Cy) / dy);
         sf::Font temp_font;
-        temp_font.loadFromFile("/Users/elizavetamanzula/Downloads/19676.ttf");
+        temp_font.loadFromFile("../assets/texture/19676.ttf");
         sf::Text num(s, temp_font, 40);
         num.setColor(color);
         num.move(9, y - 15);
