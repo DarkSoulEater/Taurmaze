@@ -2,16 +2,14 @@
 // Created by asmekal on 01.05.2021.
 //
 
-//to create maze__ use GetMaze(length, width)
-
 #include <iostream>
 #include <vector>
 #include <random>
 
-#ifndef TAURMAZE_MAZE_GENERATOR_H
-#define TAURMAZE_MAZE_GENERATOR_H
+#ifndef TAURMAZE_MAZE_H
+#define TAURMAZE_MAZE_H
 
-#endif //TAURMAZE_MAZE_GENERATOR_H
+#endif //TAURMAZE_MAZE_H
 
 class Maze{
 public:

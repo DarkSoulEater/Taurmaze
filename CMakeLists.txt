@@ -3,4 +3,4 @@ project(Taurmaze)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Taurmaze main.cpp MazeGenerator.h)
+add_executable(Taurmaze main.cpp Maze.h)
