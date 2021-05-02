@@ -3,7 +3,7 @@ project(Taurmaze)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Taurmaze main.cpp Maze.h Core.cpp Core.h)
+add_executable(Taurmaze main.cpp Maze.h Core.cpp Core.h Grid.cpp Grid.h)
 
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 
