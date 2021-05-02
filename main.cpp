@@ -10,7 +10,7 @@ int main()
     sf::RenderWindow window(sf::VideoMode(2000, 1600), "Taurmaze");
 
     Grid cur_grid;
-    Maze cur_maze(10, 10);
+    Maze cur_maze(cur_grid.maze_size, cur_grid.maze_size);
     cur_maze.Print();
 
     while (window.isOpen())

@@ -21,11 +21,9 @@ public:
 		FillMaze(0, 0);
 	}
 
-	/*
-	char Get(int i, int j) {
+	int Get(int i, int j) {
 	    return maze[i][j];
 	}
-	 */
 
 	std::vector<int>& operator[] (const int index) {
 	    return maze[index];

@@ -65,15 +65,15 @@ void Grid::Build(sf::RenderWindow& window) {
     }
 }
 
-void Grid::BuildCells(sf::RenderWindow& window, Maze maze) {
+void Grid::BuildCells(sf::RenderWindow& window, Maze& maze) {
     for (int i = 0; i < maze_size; ++i) {
         for (int j = 0; j < maze_size; ++j) {
             sf::RectangleShape cell(sf::Vector2f(dx, dy));
             cell.move(GetPoint({i, j}));
-            cell.setFillColor(sf::Color::Transparent);
-            if (maze[i][j]) cell.setFillColor(sf::Color::Black);
-            cell.setOutlineThickness(cells_thickness);
-            cell.setOutlineColor(cells_color);
+            if (maze.Get(i, j)) cell.setFillColor(sf::Color::Yellow);
+            else cell.setFillColor(sf::Color::Black);
+            // cell.setOutlineThickness(cells_thickness);
+            // cell.setOutlineColor(cells_color);
             window.draw(cell);
 
         }
