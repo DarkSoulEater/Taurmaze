@@ -10,6 +10,8 @@ int main()
     sf::RenderWindow window(sf::VideoMode(2000, 1600), "Taurmaze");
 
     Grid cur_grid;
+    Maze cur_maze(10, 10);
+    cur_maze.Print();
 
     while (window.isOpen())
     {
@@ -46,6 +48,7 @@ int main()
         window.clear(sf::Color::White);
 
         cur_grid.Build(window);
+        cur_grid.BuildCells(window, cur_maze);
 
         window.display();
     }

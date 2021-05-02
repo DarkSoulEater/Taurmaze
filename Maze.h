@@ -2,6 +2,8 @@
 // Created by Shuringan on 01.05.2021.
 //
 
+#pragma once
+
 #include <iostream>
 #include <vector>
 #include <random>
@@ -17,6 +19,16 @@ public:
 		maze.resize(height, std::vector<int>(width));
 		gen.seed(rng());
 		FillMaze(0, 0);
+	}
+
+	/*
+	char Get(int i, int j) {
+	    return maze[i][j];
+	}
+	 */
+
+	std::vector<int>& operator[] (const int index) {
+	    return maze[index];
 	}
 
 	void Print(){
