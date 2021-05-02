@@ -12,6 +12,7 @@ int main()
     Grid cur_grid;
     Maze cur_maze(cur_grid.maze_size, cur_grid.maze_size);
     cur_maze.Print();
+    cur_grid.SetCells(cur_maze);
 
     while (window.isOpen())
     {
@@ -40,6 +41,9 @@ int main()
                     cur_grid.MoveUp();
                 }
             }
+            if (event.type == sf::Event::MouseButtonPressed) {
+                cur_grid.ChangeColor(sf::Mouse::getPosition(window));
+            }
         }
 
         sf::Vector2i pos = sf::Mouse::getPosition(window);
@@ -48,7 +52,7 @@ int main()
         window.clear(sf::Color::White);
 
         cur_grid.Build(window);
-        cur_grid.BuildCells(window, cur_maze);
+        cur_grid.BuildCells(window);
 
         window.display();
     }

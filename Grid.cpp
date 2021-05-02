@@ -6,6 +6,21 @@
 #include <iostream>
 #include "Grid.h"
 
+void Cell::Build(sf::RenderWindow& window) {
+    sf::RectangleShape cell(sf::Vector2f(dx, dy));
+    cell.move(pos);
+    cell.setFillColor(color);
+    window.draw(cell);
+}
+
+bool Cell::IsClicked(sf::Vector2i mouse) {
+    return (pos.x + dx >= mouse.x && pos.x <= mouse.x) && (pos.y + dy >= mouse.y && pos.y <= mouse.y);
+}
+
+void Cell::ChangeColor() {
+    color = selected;
+}
+
 void Grid::Build(sf::RenderWindow& window) {
     for (int x = Cx; x > 50; x -= dx) {
         sf::RectangleShape line(sf::Vector2f(4.f, 1550.f));
@@ -65,21 +80,27 @@ void Grid::Build(sf::RenderWindow& window) {
     }
 }
 
-void Grid::BuildCells(sf::RenderWindow& window, Maze& maze) {
+void Grid::SetCells(Maze& maze) {
+    Cell c(0, 0, 0, 0, sf::Vector2f(0, 0), sf::Color::Black);
+    cells.assign(maze_size, std::vector<Cell> (maze_size, c));
     for (int i = 0; i < maze_size; ++i) {
         for (int j = 0; j < maze_size; ++j) {
-            sf::RectangleShape cell(sf::Vector2f(dx, dy));
-            cell.move(GetPoint({i, j}));
-            if (maze.Get(i, j)) cell.setFillColor(sf::Color::Yellow);
-            else cell.setFillColor(sf::Color::Black);
-            // cell.setOutlineThickness(cells_thickness);
-            // cell.setOutlineColor(cells_color);
-            window.draw(cell);
+            sf::Color temp_col = sf::Color::Black;
+            if (maze[i][j]) temp_col = sf::Color::Yellow;
+            Cell cell(i, j, dx, dy, GetPoint({i, j}), temp_col);
+            cells[i][j] = cell;
 
         }
     }
 }
 
+void Grid::BuildCells(sf::RenderWindow& window) {
+    for (int i = 0; i < maze_size; ++i) {
+        for (int j = 0; j < maze_size; ++j) {
+            cells[i][j].Build(window);
+        }
+    }
+}
 
 sf::Vector2f Grid::GetPoint(sf::Vector2i node) {
     int x = node.x;
@@ -122,4 +143,15 @@ void Grid::ScaleBigger() {
 void Grid::ScaleSmaller() {
     dx -= scale_velocity_x;
     dy -= scale_velocity_y;
+}
+
+void Grid::ChangeColor(sf::Vector2i mouse) {
+    for (int i = 0; i < maze_size; ++i) {
+        for (int j = 0; j < maze_size; ++j) {
+            if (cells[i][j].IsClicked(mouse)) {
+                cells[i][j].ChangeColor();
+            }
+        }
+    }
+
 }

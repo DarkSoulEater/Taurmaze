@@ -7,6 +7,33 @@
 #define UNTITLED_GRID_H
 #include "Maze.h"
 
+class Cell {
+public:
+    int i;
+    int j;
+    int dx;
+    int dy;
+    sf::Vector2f pos;
+    sf::Color color = sf::Color::Yellow;
+    sf::Color selected = sf::Color::Green;
+
+    Cell(int _i, int _j, int _dx, int _dy, sf::Vector2f _pos, sf::Color _color) {
+        i = _i;
+        j = _j;
+        dx = _dx;
+        dy = _dy;
+        pos = _pos;
+        color = _color;
+    }
+
+    bool IsClicked(sf::Vector2i mouse);
+
+    void Build(sf::RenderWindow& window);
+
+    void ChangeColor();
+
+};
+
 class Grid {
 public:
     int Cx = 1000;
@@ -22,8 +49,11 @@ public:
     sf::Color cells_color = sf::Color::Black;
     float cells_thickness = 4.f;
 
+    std::vector<std::vector<Cell> > cells;
+    void SetCells(Maze& maze);
+
     void Build(sf::RenderWindow& window);
-    void BuildCells(sf::RenderWindow& window, Maze& maze);
+    void BuildCells(sf::RenderWindow& window);
 
     sf::Vector2f GetPoint(sf::Vector2i node);
     sf::Vector2f GetSize(sf::Vector2i node);
@@ -37,6 +67,7 @@ public:
     void ScaleBigger();
     void ScaleSmaller();
 
+    void ChangeColor(sf::Vector2i mouse);
 };
 
 #endif //UNTITLED_GRID_H
