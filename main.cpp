@@ -1,7 +1,7 @@
 #include "MazeGenerator.h"
 
 int main() {
-    std::vector<std::vector<int>> maze = GetMaze(17, 17);
-    PrintMaze(maze);
+    Maze maze(100, 100);
+    maze.Print();
     return 0;
 }
