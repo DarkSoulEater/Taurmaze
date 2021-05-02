@@ -7,7 +7,7 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(2000, 1600), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(2000, 1600), "Taurmaze");
 
     Grid cur_grid;
 
@@ -18,10 +18,30 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+            if (event.type == sf::Event::KeyPressed) {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+                    cur_grid.ScaleBigger();
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+                    cur_grid.ScaleSmaller();
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+                    cur_grid.MoveLeft();
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+                    cur_grid.MoveRight();
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+                    cur_grid.MoveDown();
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+                    cur_grid.MoveUp();
+                }
+            }
         }
 
         sf::Vector2i pos = sf::Mouse::getPosition(window);
-        cur_grid.move(pos);
+        //cur_grid.MoveCenter(pos);
 
         window.clear(sf::Color::White);
 

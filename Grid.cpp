@@ -73,7 +73,37 @@ sf::Vector2f Grid::GetPoint(sf::Vector2i node) {
     return {x_wind, y_wind};
 }
 
-void Grid::move(sf::Vector2i pos) {
+sf::Vector2f Grid::GetSize(sf::Vector2i node) {
+    return {float(dx), float(dy)};
+}
+
+void Grid::MoveCenter(sf::Vector2i pos) {
     Cx = pos.x;
     Cy = pos.y;
+}
+
+void Grid::MoveLeft() {
+    Cx -= move_velocity_x;
+}
+
+void Grid::MoveRight() {
+    Cx += move_velocity_x;
+}
+
+void Grid::MoveDown() {
+    Cy += move_velocity_y;
+}
+
+void Grid::MoveUp() {
+    Cy -= move_velocity_y;
+}
+
+void Grid::ScaleBigger() {
+    dx += scale_velocity_x;
+    dy += scale_velocity_y;
+}
+
+void Grid::ScaleSmaller() {
+    dx -= scale_velocity_x;
+    dy -= scale_velocity_y;
 }
