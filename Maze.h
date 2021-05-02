@@ -13,14 +13,14 @@
 
 class Maze{
 public:
-    Maze(int height, int width){
-        maze__.resize(height, std::vector<int>(width));
-        gen__.seed(rng__());
+    Maze(int height, int width){ // NOLINT(cert-msc51-cpp)
+        maze.resize(height, std::vector<int>(width));
+        gen.seed(rng());
         FillMaze(0, 0);
     }
 
     void Print(){
-        for (auto& a : maze__) {
+        for (auto& a : maze) {
             for (auto& elem : a) {
                 if (elem) std::cout << '_';
                 else std::cout << '*';
@@ -29,18 +29,18 @@ public:
         }
     }
 private:
-    std::vector<std::vector<int>> maze__;
+    [[maybe_unused]] std::vector<std::vector<int>> maze;
     //for random
-    std::random_device rng__;
-    std::mt19937 gen__;
-    std::uniform_int_distribution<> dist__;
+    [[maybe_unused]] std::random_device rng;
+    [[maybe_unused]] std::mt19937 gen;
+    [[maybe_unused]] std::uniform_int_distribution<> dist;
 
     bool IsFree(int x, int y) {
-        return x >= 0 && y >= 0 && x < maze__.size() && y < maze__[0].size() && !maze__[x][y];
+        return x >= 0 && y >= 0 && x < maze.size() && y < maze[0].size() && !maze[x][y];
     }
 
     bool CanGo(int x, int y) {
-        return x < 0 || y < 0 || x >= maze__.size() || y >= maze__[0].size() || !maze__[x][y];
+        return x < 0 || y < 0 || x >= maze.size() || y >= maze[0].size() || !maze[x][y];
     }
 
     bool ArePointAndBordersFree(int x, int y, int px, int py) {
@@ -55,7 +55,7 @@ private:
     }
 
     void FillMaze(int x, int y) {
-        maze__[x][y] = 1;
+        maze[x][y] = 1;
         std::vector<std::pair<int, int>> buffer;
         do {
             buffer.clear();
@@ -66,7 +66,7 @@ private:
             if (ArePointAndBordersFree(x, y + 1, x, y)) buffer.emplace_back(std::pair(x, y + 1));
             if (buffer.empty()) continue;
             //choose random point
-            int random_point = dist__(gen__) % static_cast<int>(buffer.size());
+            int random_point = dist(gen) % static_cast<int>(buffer.size());
             FillMaze(buffer[random_point].first, buffer[random_point].second);
         } while (!buffer.empty());
     }
