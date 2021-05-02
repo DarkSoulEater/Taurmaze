@@ -94,7 +94,18 @@ void Grid::SetCells(Maze& maze) {
     }
 }
 
+void Grid::ChangeCells() {
+    for (int i = 0; i < maze_size; ++i) {
+        for (int j = 0; j < maze_size; ++j) {
+            cells[i][j].dx = dx;
+            cells[i][j].dy = dy;
+            cells[i][j].pos = GetPoint({i, j});
+        }
+    }
+}
+
 void Grid::BuildCells(sf::RenderWindow& window) {
+    ChangeCells();
     for (int i = 0; i < maze_size; ++i) {
         for (int j = 0; j < maze_size; ++j) {
             cells[i][j].Build(window);

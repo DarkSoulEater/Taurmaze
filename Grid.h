@@ -51,6 +51,7 @@ public:
 
     std::vector<std::vector<Cell> > cells;
     void SetCells(Maze& maze);
+    void ChangeCells();
 
     void Build(sf::RenderWindow& window);
     void BuildCells(sf::RenderWindow& window);
