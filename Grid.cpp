@@ -161,6 +161,7 @@ void Grid::ChangeColor(sf::Vector2i mouse) {
         for (int j = 0; j < maze_size; ++j) {
             if (cells[i][j].IsClicked(mouse)) {
                 cells[i][j].ChangeColor();
+                return;
             }
         }
     }
