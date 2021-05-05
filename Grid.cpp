@@ -2,9 +2,9 @@
 // Created by Елизавета Манжула on 01.05.2021.
 //
 
-#include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Grid.h"
+#include <SFML/Graphics.hpp>
 
 void Cell::Build(sf::RenderWindow& window) {
     sf::RectangleShape cell(sf::Vector2f(dx, dy));

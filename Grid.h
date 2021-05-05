@@ -2,10 +2,10 @@
 // Created by Елизавета Манжула on 01.05.2021.
 //
 
-#pragma once
 #ifndef UNTITLED_GRID_H
 #define UNTITLED_GRID_H
 #include "Maze.h"
+#include "SFML/Graphics.hpp"
 
 class Cell {
 public:

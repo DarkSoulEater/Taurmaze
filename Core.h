@@ -1,11 +1,12 @@
 //
-// Created by eleno on 02.05.2021.
+// Created by eleno on 02.05.2021.```
 //
 
 #ifndef TAURMAZE__CORE_H_
 #define TAURMAZE__CORE_H_
 
 #include <SFML/Graphics.hpp>
+#include "Object.h"
 
 class Core {
  public:

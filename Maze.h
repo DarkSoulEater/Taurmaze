@@ -2,16 +2,12 @@
 // Created by Shuringan on 01.05.2021.
 //
 
-#pragma once
+#ifndef TAURMAZE_MAZE_H
+#define TAURMAZE_MAZE_H
 
 #include <iostream>
 #include <vector>
 #include <random>
-
-#ifndef TAURMAZE_MAZE_H
-#define TAURMAZE_MAZE_H
-
-#endif //TAURMAZE_MAZE_H
 
 class Maze{
 public:
@@ -81,3 +77,5 @@ private:
 		} while (!buffer.empty());
 	}
 };
+
+#endif //TAURMAZE_MAZE_H
