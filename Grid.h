@@ -50,7 +50,7 @@ public:
     float cells_thickness = 4.f;
 
     std::vector<std::vector<Cell> > cells;
-    void SetCells(Maze& maze);
+    void SetCells(std::vector<std::vector<int>>& maze);
     void ChangeCells();
 
     void Build(sf::RenderWindow& window);

@@ -80,7 +80,7 @@ void Grid::Build(sf::RenderWindow& window) {
     }
 }
 
-void Grid::SetCells(Maze& maze) {
+void Grid::SetCells(std::vector<std::vector<int>>& maze) {
     Cell c(0, 0, 0, 0, sf::Vector2f(0, 0), sf::Color::Black);
     cells.assign(maze_size, std::vector<Cell> (maze_size, c));
     for (int i = 0; i < maze_size; ++i) {
