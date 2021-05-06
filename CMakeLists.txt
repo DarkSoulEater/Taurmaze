@@ -18,7 +18,7 @@ add_executable(
         src/util/path.h
         src/core/Object.cpp
         src/core/Object.h
-        src/Maze.cpp)
+        src/Maze.cpp src/util/asset.cpp src/util/asset.h)
 
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 

@@ -89,6 +89,8 @@ void Core::CameraUpdate() {
    * Move, scale camera
    * */
 
+
+
   auto mouse_position = sf::Mouse::getPosition(window_);
   input::MousePositionCallback(mouse_position, window_.mapPixelToCoords(mouse_position, main_camera));
 }
