@@ -1,12 +1,8 @@
-//
-// Created by eleno on 02.05.2021.
-//
-
 #include <iostream>
 #include "Core.h"
 #include "util/input.h"
 
-Core::Core() : window_(sf::VideoMode(kWidth_, kHeight_), kAppName) {}
+Core::Core() : window_(sf::VideoMode(kWidth_, kHeight_), kAppName), main_camera(window_.getDefaultView()) {}
 
 void Core::Run() {
   try {
@@ -19,16 +15,6 @@ void Core::Run() {
 void Core::MainLoop() {
   while (GameOpen()) {
     HandleEvent();
-
-    /*
-    if (input::GetKeyDown(input::KeyCode::A)) {
-      for (int i = 0; i < 10; ++i) {
-        auto obj = new Object();
-        obj->SetSpritePosition(sf::Vector2f(50 + i * 50, 50 + i * 50));
-      }
-    }
-    */
-
     DrawFrame();
   }
 }
@@ -41,7 +27,10 @@ void Core::HandleEvent() {
   PollEvent();
   CameraUpdate();
   CallPreUpdate();
+  CallOnMouse();
+  CallOnClick();
   CallUpdate();
+  CallLastUpdate();
 }
 
 void Core::DrawFrame() {
@@ -87,14 +76,48 @@ void Core::PollEvent() {
 }
 
 void Core::CameraUpdate() {
+  static bool f = true;
+  if (f) {
+    main_camera.zoom(2.f);
+    f = 0;
+  }
   /*
    * Move, scale camera
-   * */
+   */
 
 
 
   auto mouse_position = sf::Mouse::getPosition(window_);
   input::MousePositionCallback(mouse_position, window_.mapPixelToCoords(mouse_position, main_camera));
+}
+
+void Core::CallOnMouse() {
+  auto mouse_world_position = input::GetMouseWorldPosition();
+  for (auto obj: Object::buffer_) {
+    if (obj.second->sprite_.getGlobalBounds().contains(mouse_world_position)) {
+      if (obj.second->mouse_over_ == 0) {
+        obj.second->OnMouseEnter();
+        obj.second->mouse_over_ = true;
+      } else {
+        obj.second->OnMouseOver();
+      }
+    } else {
+      if (obj.second->mouse_over_) {
+        obj.second->OnMouseOver();
+        obj.second->mouse_over_ = false;
+      }
+    }
+  }
+}
+
+void Core::CallOnClick() {
+  if (input::GetMouseButtonDown(0) == 0) return;
+
+  for (auto obj : Object::buffer_) {
+    if (obj.second->mouse_over_) {
+      obj.second->OnClick();
+    }
+  }
 }
 
 void Core::CallPreUpdate() {
@@ -106,5 +129,11 @@ void Core::CallPreUpdate() {
 void Core::CallUpdate() {
   for (auto obj : Object::buffer_) {
     obj.second->Update();
+  }
+}
+
+void Core::CallLastUpdate() {
+  for (auto obj : Object::buffer_) {
+    obj.second->LastUpdate();
   }
 }

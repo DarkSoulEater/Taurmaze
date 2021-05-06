@@ -34,9 +34,15 @@ class Core {
 
   void CameraUpdate();
 
+  void CallOnMouse();
+
+  void CallOnClick();
+
   void CallPreUpdate();
 
   void CallUpdate();
+
+  void CallLastUpdate();
 };
 
 #endif //TAURMAZE__CORE_H_

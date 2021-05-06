@@ -19,19 +19,36 @@ class Object {
 
   virtual void Update();
 
+  virtual void LastUpdate();
 
-  virtual void Draw(sf::RenderWindow &window);
+
+  virtual void OnMouseEnter();
+
+  virtual void OnMouseOver();
+
+  virtual void OnMouseExit();
+
+  virtual void OnClick();
+
+
+  virtual void SetPosition(const sf::Vector2f& position);
+
+  virtual void SetTexture(const char* path);
+
+  virtual void SetTextureRect(const sf::IntRect&);
+
+  virtual void Draw(sf::RenderWindow&);
 
   virtual void SetSpritePosition(const sf::Vector2f& position);
 
 protected:
-  sf::Texture texture_;
+  int level_;
   sf::Sprite sprite_;
 
 private:
   static std::set<std::pair<int, Object*>> buffer_;
   std::set<std::pair<int, Object*>>::const_iterator buffer_iterator_;
-  int level_;
+  bool mouse_over_ = 0;
 };
 
 #endif //TAURMAZE__OBJECT_H_

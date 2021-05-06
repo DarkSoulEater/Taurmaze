@@ -1,16 +1,15 @@
-//
-// Created by asmekal on 06.05.2021.
-//
-
+#include <map>
 #include "asset.h"
 
 namespace asset {
-    sf::Texture& LoadTexture(const char* path) {
-        if(get_texture.find(path) != get_texture.end()) {
-            return get_texture[path];
-        }
-        sf::Texture texture;
-        texture.loadFromFile(path);
-        return get_texture[path] = texture;
-    }
+static std::map<const char*, sf::Texture> textures_library;
+
+sf::Texture& LoadTexture(const char* path) {
+  if(textures_library.find(path) != textures_library.end()) {
+      return textures_library[path];
+  }
+  sf::Texture texture;
+  texture.loadFromFile(path);
+  return textures_library[path] = texture;
 }
+} // namespace
