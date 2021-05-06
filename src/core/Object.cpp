@@ -7,7 +7,7 @@ Object::Object(int level) {
   level_ = level;
   buffer_iterator_ = buffer_.insert({level_, this}).first;
 
-  sprite_ = sf::Sprite(asset::LoadTexture("../assets/texture/box.png"));
+  sprite_ = sf::Sprite(asset::LoadTexture("../assets/texture/default_obj.png"));
 }
 
 Object::Object(const char *path, int level) {

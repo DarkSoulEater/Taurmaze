@@ -5,7 +5,7 @@ void b_DefaultFunction() {
   std::cout << "You do not set function!\n";
 }
 
-Button::Button() {
+Button::Button() : Object("../assets/texture/default_button.png", 10) {
   function_ = b_DefaultFunction;
 }
 void Button::OnClick() {

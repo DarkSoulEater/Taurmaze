@@ -6,7 +6,7 @@
 
 class Cell : public Object {
 public:
-    Cell(int _i, int _j) {
+    Cell(int _i, int _j) : Object("../assets/texture/default_cell.png") {
         i = _i;
         j = _j;
     }
@@ -18,7 +18,8 @@ public:
     sf::Color color = sf::Color::Yellow;
     sf::Color selected = sf::Color::Green;
 
-    Cell(int _i, int _j, int _dx, int _dy, sf::Vector2f _pos, sf::Color _color) {
+    Cell(int _i, int _j, int _dx, int _dy, sf::Vector2f _pos, sf::Color _color)
+                              : Object("../assets/texture/default_cell.png") {
         i = _i;
         j = _j;
         dx = _dx;
