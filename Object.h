@@ -5,23 +5,35 @@
 #ifndef TAURMAZE__OBJECT_H_
 #define TAURMAZE__OBJECT_H_
 
+#include <set>
 #include <SFML/Graphics.hpp>
-#include "Clickable.h"
-#include "Drawable.h"
 
-
-class Object : public Drawable, public Clickable {
+class Object {
  public:
-  Object();
-  Object(const char* path);
+  friend class Core;
+  explicit Object(int level = 0);
 
-  bool MouseBound(sf::Vector2i mouse_pos) const override;
-  void isClick() override;
+  explicit Object(const char* path, int level = 0);
 
-  void Draw(sf::RenderWindow &window) override;
+  virtual ~Object();
+
+
+  virtual void PreUpdate();
+
+  virtual void Update();
+
+
+  virtual void Draw(sf::RenderWindow &window);
+
+
+  virtual void SetSpritePosition(const sf::Vector2f& position);
  private:
   sf::Texture texture_;
   sf::Sprite sprite_;
+
+  static std::set<std::pair<int, Object*>> buffer_;
+  std::_Tree_const_iterator<std::_Tree_val<std::_Tree_simple_types<std::pair<int, Object*>>>> buffer_iterator_;
+  int level_;
 };
 
 #endif //TAURMAZE__OBJECT_H_

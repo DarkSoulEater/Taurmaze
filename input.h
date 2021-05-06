@@ -48,7 +48,9 @@ bool GetMouseButton(int button);
 bool GetMouseButtonUp(int button);
 
 
-sf::Vector2i GetMousePosition();
+sf::Vector2i GetMouseScreenPosition();
+
+sf::Vector2f GetMouseWorldPosition();
 
 sf::Vector2i GetMouseDelta();
 

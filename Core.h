@@ -16,18 +16,27 @@ class Core {
 
 
  private:
-  const int kWidth_ = 600;
-  const int kHeight_ = 600;
-  const char* kAppName = "Tourmaze";
+  const int kWidth_ = 1000;
+  const int kHeight_ = 1000;
+  const char* kAppName = "Taurmaze";
   sf::RenderWindow window_;
+  sf::View main_camera;
 
   void MainLoop();
 
   bool GameOpen();
 
-  void PollEvent();
+  void HandleEvent();
 
   void DrawFrame();
+
+  void PollEvent();
+
+  void CameraUpdate();
+
+  void CallPreUpdate();
+
+  void CallUpdate();
 };
 
 #endif //TAURMAZE__CORE_H_

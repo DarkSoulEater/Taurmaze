@@ -18,7 +18,7 @@ void Core::Run() {
 
 void Core::MainLoop() {
   while (GameOpen()) {
-    PollEvent();
+    HandleEvent();
     DrawFrame();
   }
 }
@@ -27,17 +27,39 @@ bool Core::GameOpen() {
   return window_.isOpen();
 }
 
+void Core::HandleEvent() {
+  PollEvent();
+  CameraUpdate();
+  CallPreUpdate();
+  CallUpdate();
+}
+
+void Core::DrawFrame() {
+  window_.clear(sf::Color::White);
+
+  window_.setView(main_camera);
+  bool view_flag = true;
+
+  for (auto obj: Object::buffer_) {
+    if (view_flag && obj.first >= 10) {
+      view_flag = false;
+      window_.setView(window_.getDefaultView());
+    }
+    obj.second->Draw(window_);
+  }
+
+  window_.display();
+}
 
 namespace input {
 void ResetKeyCall();
 void KeyCallback(sf::Event&, int);
 void MouseButtonCallback(sf::Event&, int);
-void MousePositionCallback(sf::Vector2i);
+void MousePositionCallback(sf::Vector2i, sf::Vector2f);
 void MouseScrollCallback(sf::Event&);
 }
 void Core::PollEvent() {
   input::ResetKeyCall();
-  input::MousePositionCallback(sf::Mouse::getPosition(window_));
 
   sf::Event event;
   while (window_.pollEvent(event)) {
@@ -52,30 +74,25 @@ void Core::PollEvent() {
       case sf::Event::MouseWheelMoved: input::MouseScrollCallback(event); break;
     }
   }
+}
 
-  for (int level = 14; level >= 0; --level) {
-    auto buffer = Clickable::GetBuffer(level);
+void Core::CameraUpdate() {
+  /*
+   * Move, scale camera
+   * */
 
-    for (auto obj : buffer) {
-      if (obj == nullptr) continue;
-      if (obj->Activate()) {
-        break;
-      }
-    }
+  auto mouse_position = sf::Mouse::getPosition(window_);
+  input::MousePositionCallback(mouse_position, window_.mapPixelToCoords(mouse_position, main_camera));
+}
+
+void Core::CallPreUpdate() {
+  for (auto obj: Object::buffer_) {
+    obj.second->PreUpdate();
   }
 }
 
-void Core::DrawFrame() {
-  window_.clear(sf::Color::White);
-
-  for (int level = 0; level <= 14; ++level) {
-    auto buffer = Drawable::GetBuffer(level);
-
-    for (auto obj : buffer) {
-      if (obj == nullptr) continue;
-      obj->Draw(window_);
-    }
+void Core::CallUpdate() {
+  for (auto obj : Object::buffer_) {
+    obj.second->Update();
   }
-
-  window_.display();
 }

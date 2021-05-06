@@ -43,6 +43,7 @@ struct {
   Key MIDDLE;
   Key RIGHT;
   sf::Vector2i position = { 0, 0 };
+  sf::Vector2f world_position = { 0, 0 };
   sf::Vector2i delta = { 0, 0 };
   int scroll_delta = 0;
 } mouse_;
@@ -323,8 +324,12 @@ void MouseButtonCallback(sf::Event& event, int action) {
   }
 }
 
-sf::Vector2i GetMousePosition() {
+sf::Vector2i GetMouseScreenPosition() {
   return mouse_.position;
+}
+
+sf::Vector2f GetMouseWorldPosition() {
+  return mouse_.world_position;
 }
 
 sf::Vector2i GetMouseDelta() {
@@ -335,10 +340,11 @@ int GetMouseScrollDelta() {
   return mouse_.scroll_delta;
 }
 
-void MousePositionCallback(sf::Vector2i position) {
+void MousePositionCallback(sf::Vector2i position, sf::Vector2f world_position) {
   auto old_pos = mouse_.position;
-  mouse_.position = { position.x, position.y };
+  mouse_.position = position;
   mouse_.delta = mouse_.position - old_pos;
+  mouse_.world_position = world_position;
 }
 
 void MouseScrollCallback(sf::Event& event) {
