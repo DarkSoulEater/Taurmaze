@@ -20,12 +20,14 @@ void Core::MainLoop() {
   while (GameOpen()) {
     HandleEvent();
 
+    /*
     if (input::GetKeyDown(input::KeyCode::A)) {
       for (int i = 0; i < 10; ++i) {
         auto obj = new Object();
         obj->SetSpritePosition(sf::Vector2f(50 + i * 50, 50 + i * 50));
       }
     }
+    */
 
     DrawFrame();
   }

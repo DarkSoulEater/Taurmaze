@@ -1,6 +1,7 @@
 //
 // Created by Shuringan on 01.05.2021.
 //
+#pragma once
 
 #ifndef TAURMAZE_MAZE_H
 #define TAURMAZE_MAZE_H

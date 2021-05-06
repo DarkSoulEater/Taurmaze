@@ -2,13 +2,20 @@
 // Created by Елизавета Манжула on 01.05.2021.
 //
 
-#ifndef UNTITLED_GRID_H
-#define UNTITLED_GRID_H
+#pragma once
+
+#ifndef TAURMAZE_GRID_H_
+#define TAURMAZE_GRID_H_
 #include "Maze.h"
 #include "SFML/Graphics.hpp"
+#include "core/Object.h"
 
-class Cell {
+class Cell : public Object {
 public:
+    Cell(int _i, int _j) {
+        i = _i;
+        j = _j;
+    }
     int i;
     int j;
     int dx;
@@ -54,7 +61,7 @@ public:
     void ChangeCells();
 
     void Build(sf::RenderWindow& window);
-    void BuildCells(sf::RenderWindow& window);
+    void BuildCells();
 
     sf::Vector2f GetPoint(sf::Vector2i node);
     sf::Vector2f GetSize(sf::Vector2i node);

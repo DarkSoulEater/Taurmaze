@@ -2,9 +2,11 @@
 // Created by Елизавета Манжула on 01.05.2021.
 //
 
+#pragma once
+
 #include <iostream>
 #include "Grid.h"
-#include <SFML/Graphics.hpp>
+#include "Maze.h"
 
 void Cell::Build(sf::RenderWindow& window) {
     sf::RectangleShape cell(sf::Vector2f(dx, dy));
@@ -94,6 +96,7 @@ void Grid::SetCells(std::vector<std::vector<int>>& maze) {
     }
 }
 
+
 void Grid::ChangeCells() {
     for (int i = 0; i < maze_size; ++i) {
         for (int j = 0; j < maze_size; ++j) {
@@ -104,14 +107,21 @@ void Grid::ChangeCells() {
     }
 }
 
-void Grid::BuildCells(sf::RenderWindow& window) {
-    ChangeCells();
-    for (int i = 0; i < maze_size; ++i) {
-        for (int j = 0; j < maze_size; ++j) {
-            cells[i][j].Build(window);
+
+void Grid::BuildCells() {
+
+    std::vector<std::vector<int> > cur_maze = Maze::generate(10, 10, 0);
+    Maze::Print();
+   int sz = cur_maze.size();
+    for (int i = 0; i < sz; ++i) {
+        for (int j = 0; j < sz; ++j){
+            Cell cur_cell(i, j);
+            sf::Vector2f pos(i * dx, j * dy);
+            cur_cell.SetSpritePosition(pos);
         }
     }
 }
+
 
 sf::Vector2f Grid::GetPoint(sf::Vector2i node) {
     int x = node.x;
