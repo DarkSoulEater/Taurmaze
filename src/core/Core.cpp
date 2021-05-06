@@ -93,18 +93,18 @@ void Core::CameraUpdate() {
 
 void Core::CallOnMouse() {
   auto mouse_world_position = input::GetMouseWorldPosition();
-  for (auto obj: Object::buffer_) {
+  for (auto& obj: Object::buffer_) {
     if (obj.second->sprite_.getGlobalBounds().contains(mouse_world_position)) {
-      if (obj.second->mouse_over_ == 0) {
+      if (obj.second->is_mouse_over_ == 0) {
         obj.second->OnMouseEnter();
-        obj.second->mouse_over_ = true;
+        obj.second->is_mouse_over_ = true;
       } else {
         obj.second->OnMouseOver();
       }
     } else {
-      if (obj.second->mouse_over_) {
-        obj.second->OnMouseOver();
-        obj.second->mouse_over_ = false;
+      if (obj.second->is_mouse_over_) {
+        obj.second->OnMouseExit();
+        obj.second->is_mouse_over_ = false;
       }
     }
   }
@@ -113,27 +113,27 @@ void Core::CallOnMouse() {
 void Core::CallOnClick() {
   if (input::GetMouseButtonDown(0) == 0) return;
 
-  for (auto obj : Object::buffer_) {
-    if (obj.second->mouse_over_) {
+  for (auto& obj : Object::buffer_) {
+    if (obj.second->is_mouse_over_) {
       obj.second->OnClick();
     }
   }
 }
 
 void Core::CallPreUpdate() {
-  for (auto obj: Object::buffer_) {
+  for (auto& obj: Object::buffer_) {
     obj.second->PreUpdate();
   }
 }
 
 void Core::CallUpdate() {
-  for (auto obj : Object::buffer_) {
+  for (auto& obj : Object::buffer_) {
     obj.second->Update();
   }
 }
 
 void Core::CallLastUpdate() {
-  for (auto obj : Object::buffer_) {
+  for (auto& obj : Object::buffer_) {
     obj.second->LastUpdate();
   }
 }

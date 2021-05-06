@@ -1,7 +1,3 @@
-//
-// Created by eleno on 02.05.2021.```
-//
-
 #ifndef TAURMAZE__CORE_H_
 #define TAURMAZE__CORE_H_
 
