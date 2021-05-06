@@ -3,7 +3,22 @@ project(Taurmaze)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Taurmaze main.cpp Maze.h Core.cpp Core.h Grid.cpp Grid.h input.cpp input.h path.h Object.cpp Object.h Maze.cpp)
+include_directories(src)
+
+add_executable(
+        ${PROJECT_NAME}
+        src/main.cpp
+        src/Maze.h
+        src/core/Core.cpp
+        src/core/Core.h
+        src/Grid.cpp
+        src/Grid.h
+        src/util/input.cpp
+        src/util/input.h
+        src/util/path.h
+        src/core/Object.cpp
+        src/core/Object.h
+        src/Maze.cpp)
 
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 
