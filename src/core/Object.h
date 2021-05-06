@@ -48,7 +48,7 @@ protected:
 private:
   static std::set<std::pair<int, Object*>> buffer_;
   std::set<std::pair<int, Object*>>::const_iterator buffer_iterator_;
-  bool mouse_over_ = 0;
+  bool is_mouse_over_ = 0;
 };
 
 #endif //TAURMAZE__OBJECT_H_
