@@ -1,10 +1,5 @@
-//
-// Created by Елизавета Манжула on 01.05.2021.
-//
-
-#pragma once
-
 #include <iostream>
+#include <vector>
 #include "Grid.h"
 #include "Maze.h"
 
@@ -111,8 +106,7 @@ void Grid::ChangeCells() {
 void Grid::BuildCells() {
 
     std::vector<std::vector<int> > cur_maze = Maze::generate(10, 10, 0);
-    Maze::Print();
-   int sz = cur_maze.size();
+    int sz = cur_maze.size();
     for (int i = 0; i < sz; ++i) {
         for (int j = 0; j < sz; ++j){
             Cell cur_cell(i, j);

@@ -1,8 +1,3 @@
-//
-// Created by Shuringan on 01.05.2021.
-//
-#pragma once
-
 #ifndef TAURMAZE_MAZE_H
 #define TAURMAZE_MAZE_H
 
@@ -11,7 +6,7 @@
 #include <random>
 
 namespace Maze {
-    std::vector<std::vector<int>> generate(int height, int width, int seed);
+    std::vector<std::vector<int>> generate(int height, int width, unsigned int seed);
 
     void Print();
 

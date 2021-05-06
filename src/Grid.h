@@ -1,9 +1,3 @@
-//
-// Created by Елизавета Манжула on 01.05.2021.
-//
-
-#pragma once
-
 #ifndef TAURMAZE_GRID_H_
 #define TAURMAZE_GRID_H_
 #include "Maze.h"
@@ -56,7 +50,7 @@ public:
     sf::Color cells_color = sf::Color::Black;
     float cells_thickness = 4.f;
 
-    std::vector<std::vector<Cell> > cells;
+    std::vector<std::vector<Cell>> cells;
     void SetCells(std::vector<std::vector<int>>& maze);
     void ChangeCells();
 

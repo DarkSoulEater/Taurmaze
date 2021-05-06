@@ -1,7 +1,3 @@
-//
-// Created by eleno on 02.05.2021.
-//
-
 #include "input.h"
 
 namespace input {

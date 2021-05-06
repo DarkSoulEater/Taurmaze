@@ -1,16 +1,9 @@
-//
-// Created by eleno on 03.05.2021.
-//
-
-#pragma once
-
 #ifndef TAURMAZE__OBJECT_H_
 #define TAURMAZE__OBJECT_H_
 
 #include <set>
 #include <SFML/Graphics.hpp>
 #include <iterator>
-#include <utility>
 
 class Object {
  public:
