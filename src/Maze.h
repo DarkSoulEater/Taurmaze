@@ -5,18 +5,10 @@
 #include <vector>
 #include <random>
 
-namespace Maze {
-    std::vector<std::vector<int>> generate(int height, int width, unsigned int seed);
+namespace maze {
+  std::vector<std::vector<int>> Generate(int height, int width, unsigned int seed);
 
-    void Print();
-
-    bool IsFree(int x, int y);
-
-    bool CanGo(int x, int y);
-
-    bool ArePointAndBordersFree(int x, int y, int px, int py);
-
-    void FillMaze(int x, int y);
-};
+  void AddItem(int item, int scale);
+};//namespace
 
 #endif //TAURMAZE_MAZE_H
