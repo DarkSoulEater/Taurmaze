@@ -37,7 +37,7 @@ namespace maze{
     int l = 0, r = static_cast<int>(random_scale.size());
     while(l + 1 < r){
       int m = l  + r >> 1;
-      if(random_scale[m].second >= scale){
+      if(random_scale[m].second <= scale){
         l = m;
       }
       else{
