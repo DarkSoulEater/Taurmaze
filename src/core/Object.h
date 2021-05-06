@@ -32,7 +32,7 @@ class Object {
   sf::Sprite sprite_;
 
   static std::set<std::pair<int, Object*>> buffer_;
-  std::_Tree_const_iterator<std::_Tree_val<std::_Tree_simple_types<std::pair<int, Object*>>>> buffer_iterator_;
+  std::set<std::pair<int, Object*>>::const_iterator buffer_iterator_;
   int level_;
 };
 
