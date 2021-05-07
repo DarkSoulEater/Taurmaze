@@ -65,24 +65,14 @@ static void FillMaze(std::vector<std::vector<int>>& maze_, int x, int y) {
 }
 
 static void AddCycles(std::vector<std::vector<int>>& maze_, int cycle_regulator = 5){
-  int add_random = 0;
-  std::vector<std::pair<int,int>> coordinates;
   for(unsigned int i = 0; i < maze_.size(); ++i){
     for(unsigned int j = 0; j < maze_[i].size(); ++j){
-      if(!maze_[i][j]){
-        ++add_random;
-        coordinates.emplace_back(std::make_pair(i, j));
+      if(!maze_[i][j] && rand() % 10 <= cycle_regulator){
+        int scale = rand() % (random_scale.back().second + 1);
+        int item = GetItem(scale);
+        maze_[i][j] = item;
       }
     }
-  }
-  add_random /= cycle_regulator;
-  std::random_device rd;
-  std::mt19937 g(rd());
-  std::shuffle(coordinates.begin(), coordinates.end(), g);
-  for(int i = 0; i < add_random; ++i){
-    int scale = rand() % (random_scale.back().second + 1);
-    int item = GetItem(scale);
-    maze_[coordinates[i].first][coordinates[i].second] = item;
   }
 }
 
