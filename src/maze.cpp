@@ -64,7 +64,7 @@ static void FillMaze(std::vector<std::vector<int>>& maze_, int x, int y) {
   } while (!buffer.empty());
 }
 
-static void AddCycles(std::vector<std::vector<int>>& maze_, int cycle_regulator = 5){
+static void AddCycles(std::vector<std::vector<int>>& maze_, int cycle_regulator = 1){
   for(unsigned int i = 0; i < maze_.size(); ++i){
     for(unsigned int j = 0; j < maze_[i].size(); ++j){
       if(!maze_[i][j] && rand() % 10 <= cycle_regulator){
