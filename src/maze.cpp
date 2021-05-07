@@ -1,4 +1,5 @@
-#include "Maze.h"
+#include "maze.h"
+#include <random>
 
 namespace maze {
 static bool IsFree(std::vector<std::vector<int>>& maze_, int x, int y) {
@@ -64,8 +65,8 @@ static void FillMaze(std::vector<std::vector<int>>& maze_, int x, int y) {
 
 std::vector<std::vector<int>> Generate(int height, int width, unsigned int seed){
   srand(seed);
-  std::vector<std::vector<int>> maze_(height, std::vector<int>(width));
-  FillMaze(maze_, 0, 0);
-  return maze_;
+  std::vector<std::vector<int>> maze(height, std::vector<int>(width));
+  FillMaze(maze, 0, 0);
+  return maze;
 }
 } // namespace

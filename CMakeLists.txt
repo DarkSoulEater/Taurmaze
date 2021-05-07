@@ -8,7 +8,7 @@ include_directories(src)
 add_executable(
         ${PROJECT_NAME}
         src/main.cpp
-        src/Maze.h
+        src/maze.h
         src/core/Core.cpp
         src/core/Core.h
         src/Grid.cpp
@@ -18,7 +18,7 @@ add_executable(
         src/util/path.h
         src/core/Object.cpp
         src/core/Object.h
-        src/Maze.cpp
+        src/maze.cpp
         src/util/asset.cpp
         src/util/asset.h
         src/UI/Button.cpp

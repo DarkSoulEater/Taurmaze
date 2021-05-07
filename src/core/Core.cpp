@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Core.h"
+#include "Grid.h"
 #include "util/input.h"
 
 Core::Core() : window_(sf::VideoMode(kWidth_, kHeight_), kAppName), main_camera(window_.getDefaultView()) {}
@@ -15,6 +16,10 @@ void Core::Run() {
 void Core::MainLoop() {
   while (GameOpen()) {
     HandleEvent();
+    if (input::GetKeyDown(input::KeyCode::M)) {
+      Grid* grid = new Grid;
+      grid->BuildCells();
+    }
     DrawFrame();
   }
 }

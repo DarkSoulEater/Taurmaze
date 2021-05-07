@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "Grid.h"
-#include "Maze.h"
+#include "maze.h"
 
 void Cell::Build(sf::RenderWindow& window) {
     sf::RectangleShape cell(sf::Vector2f(dx, dy));
@@ -104,15 +104,17 @@ void Grid::ChangeCells() {
 
 
 void Grid::BuildCells() {
-
-    std::vector<std::vector<int> > cur_maze = maze::Generate(10, 10, 0);
-    int sz = cur_maze.size();
+  maze::AddItem(1, 10);
+  std::vector<std::vector<int>> cur_maze = maze::Generate(50, 50, 0);
+  int sz = cur_maze.size();
     for (int i = 0; i < sz; ++i) {
-        for (int j = 0; j < sz; ++j){
-            Cell cur_cell(i, j);
-            sf::Vector2f pos(i * dx, j * dy);
-            cur_cell.SetSpritePosition(pos);
+      for (int j = 0; j < sz; ++j){
+        if (cur_maze[j][i] == 1) {
+          Cell *cur_cell = new Cell(i, j);
+          sf::Vector2f pos(i * dx, j * dy);
+          cur_cell->SetSpritePosition(pos);
         }
+      }
     }
 }
 
