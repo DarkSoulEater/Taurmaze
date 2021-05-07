@@ -81,16 +81,25 @@ void Core::PollEvent() {
 }
 
 void Core::CameraUpdate() {
-  static bool f = true;
-  if (f) {
-    main_camera.zoom(2.f);
-    f = 0;
+  float camera_move_velocity = 5.0f;
+  if (input::GetKey(input::KeyCode::W)) {
+    main_camera.move(0.0f, -camera_move_velocity);
+  } else if (input::GetKey(input::KeyCode::S)) {
+    main_camera.move(0.0f, +camera_move_velocity);
   }
-  /*
-   * Move, scale camera
-   */
 
+  if (input::GetKey(input::KeyCode::A)) {
+    main_camera.move(-camera_move_velocity, 0.0f);
+  } else if (input::GetKey(input::KeyCode::D)) {
+    main_camera.move(camera_move_velocity, 0.0f);
+  }
 
+  float camera_zoom_velocity = 1.02f;
+  if (input::GetKey(input::KeyCode::Z)) {
+    main_camera.zoom(1 / camera_zoom_velocity);
+  } else if (input::GetKey(input::KeyCode::X)) {
+    main_camera.zoom(camera_zoom_velocity);
+  }
 
   auto mouse_position = sf::Mouse::getPosition(window_);
   input::MousePositionCallback(mouse_position, window_.mapPixelToCoords(mouse_position, main_camera));
