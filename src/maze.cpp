@@ -1,5 +1,6 @@
 #include "maze.h"
 #include <random>
+#include <algorithm>
 
 namespace maze {
 static bool IsFree(std::vector<std::vector<int>>& maze_, int x, int y) {
@@ -63,10 +64,31 @@ static void FillMaze(std::vector<std::vector<int>>& maze_, int x, int y) {
   } while (!buffer.empty());
 }
 
+static void AddCycles(std::vector<std::vector<int>>& maze_){
+  int add_random = maze_.size() * maze_[0].size() / 10;
+  std::vector<std::pair<int,int>> coordinates;
+  for(unsigned int i = 0; i < maze_.size(); ++i){
+    for(unsigned int j = 0; j < maze_[i].size(); ++j){
+      if(!maze_[i][j]){
+        coordinates.emplace_back(std::make_pair(i, j));
+      }
+    }
+  }
+  std::random_device rd;
+  std::mt19937 g(rd());
+  std::shuffle(coordinates.begin(), coordinates.end(), g);
+  for(int i = 0; i < add_random; ++i){
+    int scale = rand() % (random_scale.back().second + 1);
+    int item = GetItem(scale);
+    maze_[coordinates[i].first][coordinates[i].second] = item;
+  }
+}
+
 std::vector<std::vector<int>> Generate(int height, int width, unsigned int seed){
   srand(seed);
   std::vector<std::vector<int>> maze(height, std::vector<int>(width));
   FillMaze(maze, 0, 0);
+  AddCycles(maze);
   return maze;
 }
 } // namespace
