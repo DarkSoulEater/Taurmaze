@@ -8,12 +8,14 @@ class Core {
  public:
   Core();
 
+  ~Core();
+
   void Run();
 
 
  private:
-  const int kWidth_ = 1000;
-  const int kHeight_ = 1000;
+  const int kWidth_ = 1920;
+  const int kHeight_ = 1080;
   const char* kAppName = "Taurmaze";
   sf::RenderWindow window_;
   sf::View main_camera;
@@ -27,6 +29,8 @@ class Core {
   void DrawFrame();
 
   void PollEvent();
+
+  void UpdateScene();
 
   void CameraUpdate();
 

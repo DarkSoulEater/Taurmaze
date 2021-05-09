@@ -105,7 +105,7 @@ void Grid::ChangeCells() {
 
 void Grid::BuildCells() {
   maze::AddItem(1, 10);
-  std::vector<std::vector<int>> cur_maze = maze::Generate(50, 50, 0);
+  std::vector<std::vector<int>> cur_maze = maze::Generate(30, 30, 0);
   int sz = cur_maze.size();
     for (int i = 0; i < sz; ++i) {
       for (int j = 0; j < sz; ++j){

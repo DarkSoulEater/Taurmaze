@@ -1,5 +1,6 @@
 #ifndef TAURMAZE_GRID_H_
 #define TAURMAZE_GRID_H_
+
 #include "maze.h"
 #include "SFML/Graphics.hpp"
 #include "core/Object.h"

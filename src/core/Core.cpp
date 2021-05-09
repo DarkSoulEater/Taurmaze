@@ -1,9 +1,20 @@
 #include <iostream>
 #include "Core.h"
 #include "Grid.h"
+#include "Scene.h"
+#include "UI/Button.h"
 #include "util/input.h"
 
-Core::Core() : window_(sf::VideoMode(kWidth_, kHeight_), kAppName), main_camera(window_.getDefaultView()) {}
+Core::Core() : window_(sf::VideoMode(kWidth_, kHeight_), kAppName), main_camera(window_.getDefaultView()) {
+  LoadScene(Scene::START_MENU);
+}
+
+Core::~Core() {
+  auto objects = Object::buffer_;
+  for (auto& obj : objects) {
+    delete obj.second;
+  }
+}
 
 void Core::Run() {
   try {
@@ -16,11 +27,8 @@ void Core::Run() {
 void Core::MainLoop() {
   while (GameOpen()) {
     HandleEvent();
-    if (input::GetKeyDown(input::KeyCode::M)) {
-      Grid* grid = new Grid;
-      grid->BuildCells();
-    }
     DrawFrame();
+    UpdateScene();
   }
 }
 
@@ -53,6 +61,34 @@ void Core::DrawFrame() {
   }
 
   window_.display();
+}
+
+void Core::UpdateScene() {
+  static Scene current_scene = Scene::NONE;
+  Scene target_scene = GetScene();
+  if (current_scene == target_scene) return;
+
+  auto objects = Object::buffer_;
+  for (auto& obj: objects) {
+    delete obj.second;
+  }
+
+  current_scene = target_scene;
+
+  switch (target_scene) {
+    case Scene::NONE:break;
+    case Scene::START_MENU: {
+      Button* button =  new Button(b_LoadGameScene);
+      button->SetPosition(sf::Vector2f(300, 300));
+      break;
+    }
+    case Scene::GAME: {
+      Grid* grid = new Grid();
+      grid->BuildCells();
+      break;
+    }
+    case Scene::EXIT: window_.close(); break;
+  }
 }
 
 namespace input {
@@ -127,9 +163,11 @@ void Core::CallOnMouse() {
 void Core::CallOnClick() {
   if (input::GetMouseButtonDown(0) == 0) return;
 
-  for (auto& obj : Object::buffer_) {
+  auto& objects = Object::buffer_;
+  for (auto it = objects.rbegin(); it != objects.rend(); ++it) {
+    auto obj = *it;
     if (obj.second->is_mouse_over_) {
-      obj.second->OnClick();
+      if (obj.second->OnClick()) return;
     }
   }
 }

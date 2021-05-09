@@ -24,7 +24,7 @@ add_executable(
         src/UI/Button.cpp
         src/UI/Button.h
         src/game/settings.cpp
-        src/game/settings.h)
+        src/game/settings.h src/core/Scene.cpp src/core/Scene.h)
 
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 

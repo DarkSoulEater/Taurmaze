@@ -5,6 +5,18 @@
 #include <SFML/Graphics.hpp>
 #include <iterator>
 
+enum class Tag {
+  NONE,
+  DEBUG,
+  LEVEL_1,
+  LEVEL_2,
+  LEVEL_3,
+  UI,
+  UI_1,
+  UI_2,
+  UI_3,
+};
+
 class Object {
  public:
   friend class Core;
@@ -28,7 +40,7 @@ class Object {
 
   virtual void OnMouseExit();
 
-  virtual void OnClick();
+  virtual bool OnClick();
 
 
   virtual void SetPosition(const sf::Vector2f& position);
@@ -48,7 +60,7 @@ protected:
 private:
   static std::set<std::pair<int, Object*>> buffer_;
   std::set<std::pair<int, Object*>>::const_iterator buffer_iterator_;
-  bool is_mouse_over_ = 0;
+  bool is_mouse_over_ = false;
 };
 
 #endif //TAURMAZE__OBJECT_H_

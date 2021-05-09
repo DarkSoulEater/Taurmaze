@@ -34,7 +34,7 @@ void Object::OnMouseOver() {}
 
 void Object::OnMouseExit() {}
 
-void Object::OnClick() {}
+bool Object::OnClick() {return false;}
 
 
 void Object::SetPosition(const sf::Vector2f &position) {

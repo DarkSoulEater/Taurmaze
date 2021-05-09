@@ -4,11 +4,15 @@
 #include "core/Object.h"
 #include <functional>
 
+void b_DefaultFunction();
+
+void b_LoadGameScene();
+
 class Button : public Object {
  public:
-  Button();
+  explicit Button(std::function<void()> function = b_DefaultFunction);
 
-  void OnClick() override;
+  bool OnClick() override;
 
  private:
   std::function<void()> function_;
