@@ -2,11 +2,24 @@
 #include <vector>
 #include "Grid.h"
 #include "maze.h"
+#include "../util/input.h"
 
 Cell::Cell(int x, int y, Grid& grid) : Object("../assets/texture/default_cell.png"), position_({x, y}), grid_(grid) {}
 
 void Grid::Update() {
-
+  if (input::GetKeyDown(input::KeyCode::E)) {
+    std::vector<sf::Vector2f> targets{
+        ToWorldCoords({1, 0}),
+        ToWorldCoords({2, 0}),
+        ToWorldCoords({3, 0}),
+        ToWorldCoords({4, 0}),
+        ToWorldCoords({4, 1}),
+        ToWorldCoords({4, 2}),
+        ToWorldCoords({5, 2})
+    };
+    std::reverse(targets.begin(), targets.end());
+    players_[0]->SetTargets(targets);
+  }
 }
 
 void Grid::Draw(sf::RenderWindow &) {
@@ -54,6 +67,10 @@ void Grid::DestroyLevel() {
 
 sf::Vector2f Grid::ToWorldCoords(sf::Vector2i position) {
   return sf::Vector2f(position.x * scale_.x, position.y * scale_.y);
+}
+
+sf::Vector2i Grid::ToGridCoords(sf::Vector2f position) {
+  return sf::Vector2i(0, 0); // TODO:
 }
 
 /*

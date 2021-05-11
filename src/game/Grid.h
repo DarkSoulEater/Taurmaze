@@ -36,6 +36,8 @@ public:
 
   sf::Vector2f ToWorldCoords(sf::Vector2i position);
 
+  sf::Vector2i ToGridCoords(sf::Vector2f position);
+
  private:
   sf::Vector2i scale_ = {100, 100};
   std::vector<Cell*> cells_;

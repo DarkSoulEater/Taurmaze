@@ -9,6 +9,10 @@ class Player : public Object {
 
   void Update() override;
 
+  void SetTargets(const std::vector<sf::Vector2f>&);
+
+  bool InMove() const;
+
     //void Draw(sf::RenderWindow &) override;
  private:
   /*
@@ -16,7 +20,7 @@ class Player : public Object {
    */
 
   std::vector<sf::Vector2f> targets_;
-  float move_speed = 1.0f;
+  float move_speed = 0.5f;
 };
 
 #endif //TAURMAZE_SRC_GAME_PLAYER_H_
