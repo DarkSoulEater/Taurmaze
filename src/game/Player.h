@@ -31,17 +31,14 @@ class Player : public Object {
 
     //void Draw(sf::RenderWindow &) override;
  private:
-  /*
-   * Attribute - health, speed...
-   */
-
-  std::vector<sf::Vector2f> targets_;
-  float move_speed = 0.5f;
-
   int health_points = 10;
   int defence = 10;
   int speed = 3;
   int vision = 3;
+
+  std::vector<sf::Vector2f> targets_;
+  float move_speed = 0.5f;
+
 };
 
 #endif //TAURMAZE_SRC_GAME_PLAYER_H_
