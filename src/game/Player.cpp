@@ -26,6 +26,38 @@ bool Player::InMove() const {
   return !targets_.empty();
 }
 
+int Player::get_health_points() {
+  return health_points;
+}
+
+int& Player::set_health_points() {
+  return health_points;
+}
+
+int Player::get_defence() {
+  return defence;
+}
+
+int& Player::set_defence() {
+  return defence;
+}
+
+float Player::get_speed() {
+  return speed;
+}
+
+float& Player::set_speed() {
+  return speed;
+}
+
+int Player::get_vision() {
+  return vision;
+}
+
+int& Player::set_vision() {
+  return vision;
+}
+
 //void Player::Draw(sf::RenderWindow &) {
 
 //}
