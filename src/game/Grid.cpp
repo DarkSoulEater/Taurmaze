@@ -3,12 +3,60 @@
 #include "Grid.h"
 #include "maze.h"
 
-void Cell::Build(sf::RenderWindow& window) {
-    sf::RectangleShape cell(sf::Vector2f(dx, dy));
-    cell.move(pos);
-    cell.setFillColor(color);
-    window.draw(cell);
+Cell::Cell(int x, int y, Grid& grid) : Object("../assets/texture/default_cell.png"), position_({x, y}), grid_(grid) {}
+
+void Grid::Update() {
+
 }
+
+void Grid::Draw(sf::RenderWindow &) {
+
+}
+
+void Grid::CreateLevel(LevelOption option) {
+  // Create logic maze
+  maze::AddItem(1, 10);
+  maze_ = maze::Generate(option.height, option.width, option.seed);
+
+  // Create physics maze
+  uint64_t maze_width = maze_[0].size();
+  uint64_t maze_height = maze_.size();
+
+  for (size_t i = 0; i < maze_height; ++i) {
+    for (size_t j = 0; j < maze_width; ++j){
+      if (maze_[j][i] == 1) {
+        Cell* cell = new Cell(i, j, *this);
+        cells_.push_back(cell);
+        cell->SetSpritePosition({float(i * scale_.x), float(j * scale_.y) });
+      }
+    }
+  }
+
+  // Create players
+  for (size_t i = 0; i < option.player_count; ++i) {
+    Player* player = new Player;
+    players_.push_back(player);
+    player->SetPosition(ToWorldCoords({0, 0}));
+  }
+}
+
+void Grid::DestroyLevel() {
+  for (size_t i = 0; i < cells_.size(); ++i) {
+    delete cells_[i];
+  }
+  cells_.clear();
+
+  for (size_t i = 0; i < maze_.size(); ++i) {
+    maze_[i].clear();
+  }
+  maze_.clear();
+}
+
+sf::Vector2f Grid::ToWorldCoords(sf::Vector2i position) {
+  return sf::Vector2f(position.x * scale_.x, position.y * scale_.y);
+}
+
+/*
 
 bool Cell::IsClicked(sf::Vector2i mouse) {
     return (pos.x + dx >= mouse.x && pos.x <= mouse.x) && (pos.y + dy >= mouse.y && pos.y <= mouse.y);
@@ -92,17 +140,6 @@ void Grid::SetCells(std::vector<std::vector<int>>& maze) {
 }
 
 
-void Grid::ChangeCells() {
-    for (int i = 0; i < maze_size; ++i) {
-        for (int j = 0; j < maze_size; ++j) {
-            cells[i][j].dx = dx;
-            cells[i][j].dy = dy;
-            cells[i][j].pos = GetPoint({i, j});
-        }
-    }
-}
-
-
 void Grid::BuildCells() {
   maze::AddItem(1, 10);
   std::vector<std::vector<int>> cur_maze = maze::Generate(30, 30, 0);
@@ -126,6 +163,7 @@ sf::Vector2f Grid::GetPoint(sf::Vector2i node) {
     float y_wind = - y * dy + Cy - dy / 2.0;
     return {x_wind, y_wind};
 }
+
 
 sf::Vector2f Grid::GetSize(sf::Vector2i node) {
     return {float(dx), float(dy)};
@@ -172,4 +210,4 @@ void Grid::ChangeColor(sf::Vector2i mouse) {
         }
     }
 
-}
+}*/

@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Core.h"
-#include "Grid.h"
+#include "game/Grid.h"
 #include "Scene.h"
 #include "UI/Button.h"
 #include "util/input.h"
@@ -84,7 +84,11 @@ void Core::UpdateScene() {
     }
     case Scene::GAME: {
       Grid* grid = new Grid();
-      grid->BuildCells();
+      grid->CreateLevel({
+        .width = 20,
+        .height = 20,
+        .seed = 0
+      });
       break;
     }
     case Scene::EXIT: window_.close(); break;
