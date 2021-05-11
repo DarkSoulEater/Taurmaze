@@ -26,36 +26,36 @@ bool Player::InMove() const {
   return !targets_.empty();
 }
 
-int Player::get_health_points() {
+int Player::GetHealthPoints() const {
   return health_points;
 }
 
-int& Player::set_health_points() {
-  return health_points;
+void Player::SetHealthPoints(int new_health) {
+  health_points = new_health;
 }
 
-int Player::get_defence() {
+int Player::GetDefence() const {
   return defence;
 }
 
-int& Player::set_defence() {
-  return defence;
+void Player::SetDefence(int new_defence) {
+  defence = new_defence;
 }
 
-float Player::get_speed() {
+int Player::GetSpeed() const {
   return speed;
 }
 
-float& Player::set_speed() {
-  return speed;
+void Player::SetSpeed(int new_speed) {
+  speed = new_speed;
 }
 
-int Player::get_vision() {
+int Player::GetVision() const {
   return vision;
 }
 
-int& Player::set_vision() {
-  return vision;
+void Player::SetVision(int new_vision) {
+  vision = new_vision;
 }
 
 //void Player::Draw(sf::RenderWindow &) {

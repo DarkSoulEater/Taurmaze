@@ -13,21 +13,21 @@ class Player : public Object {
 
   bool InMove() const;
 
-  int get_health_points();
+  int GetHealthPoints() const;
 
-  int& set_health_points();
+  void SetHealthPoints(int new_health);
 
-  int get_defence();
+  int GetDefence() const;
 
-  int& set_defence();
+  void SetDefence(int new_defence);
 
-  float get_speed();
+  int GetSpeed() const;
 
-  float& set_speed();
+  void SetSpeed(int new_speed);
 
-  int get_vision();
+  int GetVision() const;
 
-  int& set_vision();
+  void SetVision(int new_vision);
 
     //void Draw(sf::RenderWindow &) override;
  private:
