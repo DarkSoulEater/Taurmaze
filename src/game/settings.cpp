@@ -1,5 +1,8 @@
 #include "settings.h"
 
 namespace settings {
-int vol = 0;
+  // Game
+
+  // Debug
+  bool DDrawCoordsGrid = true;
 } // namespace

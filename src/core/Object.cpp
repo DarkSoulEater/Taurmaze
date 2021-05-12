@@ -8,6 +8,7 @@ Object::Object(int level) {
   buffer_iterator_ = buffer_.insert({level_, this}).first;
 
   sprite_ = sf::Sprite(asset::LoadTexture("../assets/texture/default_obj.png"));
+  sprite_.setOrigin(sprite_.getTextureRect().width / 2, sprite_.getTextureRect().height / 2);
 }
 
 Object::Object(const char *path, int level) {
@@ -15,6 +16,7 @@ Object::Object(const char *path, int level) {
   buffer_iterator_ = buffer_.insert({level_, this}).first;
 
   sprite_ = sf::Sprite(asset::LoadTexture(path));
+  sprite_.setOrigin(sprite_.getTextureRect().width / 2, sprite_.getTextureRect().height / 2);
 }
 
 Object::~Object() {
@@ -43,11 +45,18 @@ void Object::SetPosition(const sf::Vector2f &position) {
 
 void Object::SetTexture(const char* path) {
   sprite_.setTexture(asset::LoadTexture(path));
+  sprite_.setOrigin(sprite_.getTextureRect().width * 0.5f, sprite_.getTextureRect().height * 0.5f);
 }
 
 void Object::SetTextureRect(const sf::IntRect& rect) {
   sprite_.setTextureRect(rect);
+  sprite_.setOrigin(sprite_.getTextureRect().width * 0.5f, sprite_.getTextureRect().height * 0.5f);
 }
+
+sf::Vector2f Object::GetOrigin() {
+  return sprite_.getOrigin();
+}
+
 
 void Object::Draw(sf::RenderWindow &window) {
   window.draw(sprite_);

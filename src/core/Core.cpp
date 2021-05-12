@@ -28,6 +28,7 @@ void Core::MainLoop() {
   while (GameOpen()) {
     HandleEvent();
     DrawFrame();
+    CallLastUpdate();
     UpdateScene();
   }
 }
@@ -43,7 +44,6 @@ void Core::HandleEvent() {
   CallOnMouse();
   CallOnClick();
   CallUpdate();
-  CallLastUpdate();
 }
 
 void Core::DrawFrame() {
@@ -86,7 +86,7 @@ void Core::UpdateScene() {
       Grid* grid = new Grid();
       grid->CreateLevel({
         .width = 20,
-        .height = 20,
+        .height = 15,
         .seed = 0
       });
       break;

@@ -1,9 +1,10 @@
 #include "Player.h"
+#include "Grid.h"
 
-Player::Player() : Object("../assets/texture/default_player.png", 5) {
-
+Player::Player(Grid& grid) : Object("../assets/texture/default_player.png", 5), grid_(grid) {
+  coords_ = grid_.ToGridCoords(sprite_.getPosition());
 }
-
+#include "iostream"
 void Player::Update() {
   if (InMove()) {
     auto dir = *targets_.rbegin() - sprite_.getPosition();
@@ -15,7 +16,18 @@ void Player::Update() {
     dir.x /= dir_len, dir.y /= dir_len;
 
     SetPosition(sprite_.getPosition() + dir * move_speed);
+    coords_ = grid_.ToGridCoords(sprite_.getPosition());
   }
+}
+
+void Player::Draw(sf::RenderWindow &window) {
+  Object::Draw(window);
+
+  sf::CircleShape circle_shape;
+  circle_shape.setRadius(10);
+  circle_shape.setFillColor(sf::Color::Red);
+  circle_shape.setPosition(grid_.ToWorldCoords(coords_));
+  window.draw(circle_shape);
 }
 
 void Player::SetTargets(const std::vector<sf::Vector2f>& targets) {
@@ -58,6 +70,6 @@ void Player::SetVision(int new_vision) {
   vision = new_vision;
 }
 
-//void Player::Draw(sf::RenderWindow &) {
-
-//}
+sf::Vector2i Player::GetCoords() {
+  return coords_;
+}

@@ -4,12 +4,15 @@
 #include "SFML/Graphics.hpp"
 #include "core/Object.h"
 #include "Player.h"
+#include <map>
 
 class Grid;
 
 class Cell : public Object {
 public:
   Cell(int x, int y, Grid &grid);
+
+  void LastUpdate() override;
 
   sf::Vector2i position_;
 
@@ -38,11 +41,23 @@ public:
 
   sf::Vector2i ToGridCoords(sf::Vector2f position);
 
+  Cell* GetCell(int x, int y);
+  Cell* GetCell(sf::Vector2i coords);
+
  private:
   sf::Vector2i scale_ = {100, 100};
+
   std::vector<Cell*> cells_;
+  std::map<std::pair<int, int>, Cell*> cells_map_;
   std::vector<std::vector<int>> maze_;
+
+  uint32_t turn_ = 0;
   std::vector<Player*> players_;
+  std::vector<bool> is_bot_;
+
+  std::vector<sf::Vector2i> GetWay(sf::Vector2i start, sf::Vector2i target);
+
+  void Select();
 };
 
 #endif //UNTITLED_GRID_H

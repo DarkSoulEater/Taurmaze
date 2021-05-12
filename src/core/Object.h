@@ -49,6 +49,8 @@ class Object {
 
   virtual void SetTextureRect(const sf::IntRect&);
 
+  virtual sf::Vector2f GetOrigin();
+
   virtual void Draw(sf::RenderWindow&);
 
   virtual void SetSpritePosition(const sf::Vector2f& position);

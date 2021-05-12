@@ -3,11 +3,15 @@
 
 #include "../core/Object.h"
 
+class Grid;
+
 class Player : public Object {
  public:
-  Player();
+  Player(Grid& grid);
 
   void Update() override;
+
+  void Draw(sf::RenderWindow &) override;
 
   void SetTargets(const std::vector<sf::Vector2f>&);
 
@@ -29,15 +33,16 @@ class Player : public Object {
 
   void SetVision(int new_vision);
 
-    //void Draw(sf::RenderWindow &) override;
+  sf::Vector2i GetCoords();
  private:
   int health_points = 10;
   int defence = 10;
   int speed = 3;
   int vision = 3;
-
+  Grid& grid_;
   std::vector<sf::Vector2f> targets_;
   float move_speed = 0.5f;
+  sf::Vector2i coords_ = {0, 0 };
 
 };
 

@@ -3,27 +3,54 @@
 #include "Grid.h"
 #include "maze.h"
 #include "../util/input.h"
+#include "settings.h"
 
 Cell::Cell(int x, int y, Grid& grid) : Object("../assets/texture/default_cell.png"), position_({x, y}), grid_(grid) {}
 
-void Grid::Update() {
-  if (input::GetKeyDown(input::KeyCode::E)) {
-    std::vector<sf::Vector2f> targets{
-        ToWorldCoords({1, 0}),
-        ToWorldCoords({2, 0}),
-        ToWorldCoords({3, 0}),
-        ToWorldCoords({4, 0}),
-        ToWorldCoords({4, 1}),
-        ToWorldCoords({4, 2}),
-        ToWorldCoords({5, 2})
-    };
-    std::reverse(targets.begin(), targets.end());
-    players_[0]->SetTargets(targets);
-  }
+void Cell::LastUpdate() {
+  SetTexture("../assets/texture/default_cell.png");
 }
 
-void Grid::Draw(sf::RenderWindow &) {
+void Grid::Update() {
+  if (!is_bot_[turn_]) {
+    Select();
 
+    if (input::GetKeyDown(input::KeyCode::E)) {
+      sf::Vector2i target = ToGridCoords(input::GetMouseWorldPosition());
+      auto way = GetWay(players_[turn_]->GetCoords(), target);
+      std::vector<sf::Vector2f> targets;
+      for (auto point : way) {
+        targets.push_back(ToWorldCoords(point));
+      }
+      std::reverse(targets.begin(), targets.end());
+      players_[turn_]->SetTargets(targets);
+    }
+  }
+
+  // TMP
+  auto cell = GetCell(ToGridCoords(input::GetMouseWorldPosition()));
+  if (cell) cell->SetTexture("../assets/texture/default_select_cell.png");
+}
+
+void Grid::Draw(sf::RenderWindow &window) {
+  if (!settings::DDrawCoordsGrid) return;
+  sf::VertexArray line(sf::Lines, 2);
+  line[0].color = sf::Color::Green;
+  line[1].color = sf::Color::Green;
+
+  int window_width = window.getSize().x;
+  int window_height = window.getSize().y;
+  int grid_size = 50;
+
+  for (int i = -grid_size; i <= grid_size; ++i) {
+    line[0].position = ToWorldCoords({i, -grid_size});
+    line[1].position = ToWorldCoords({i, grid_size});
+    window.draw(line);
+
+    line[0].position = ToWorldCoords({-grid_size, i});
+    line[1].position = ToWorldCoords({grid_size, i});
+    window.draw(line);
+  }
 }
 
 void Grid::CreateLevel(LevelOption option) {
@@ -35,20 +62,22 @@ void Grid::CreateLevel(LevelOption option) {
   uint64_t maze_width = maze_[0].size();
   uint64_t maze_height = maze_.size();
 
-  for (size_t i = 0; i < maze_height; ++i) {
-    for (size_t j = 0; j < maze_width; ++j){
-      if (maze_[j][i] == 1) {
-        Cell* cell = new Cell(i, j, *this);
+  for (size_t y = 0; y < maze_height; ++y) {
+    for (size_t x = 0; x < maze_width; ++x){
+      if (maze_[y][x] == 1) {
+        Cell* cell = new Cell(x, y, *this);
         cells_.push_back(cell);
-        cell->SetSpritePosition({float(i * scale_.x), float(j * scale_.y) });
+        cells_map_[{x, y}] = cell;
+        cell->SetSpritePosition({float(x * scale_.x), float(y * scale_.y) });
       }
     }
   }
 
   // Create players
   for (size_t i = 0; i < option.player_count; ++i) {
-    Player* player = new Player;
+    Player* player = new Player(*this);
     players_.push_back(player);
+    is_bot_.push_back(false);
     player->SetPosition(ToWorldCoords({0, 0}));
   }
 }
@@ -70,161 +99,45 @@ sf::Vector2f Grid::ToWorldCoords(sf::Vector2i position) {
 }
 
 sf::Vector2i Grid::ToGridCoords(sf::Vector2f position) {
-  return sf::Vector2i(0, 0); // TODO:
+  return sf::Vector2i(roundf(position.x / scale_.x), roundf(position.y / scale_.y));
 }
 
-/*
-
-bool Cell::IsClicked(sf::Vector2i mouse) {
-    return (pos.x + dx >= mouse.x && pos.x <= mouse.x) && (pos.y + dy >= mouse.y && pos.y <= mouse.y);
+Cell *Grid::GetCell(int x, int y) {
+  if (cells_map_.count({x, y})) return cells_map_[{x, y}];
+  return nullptr;
 }
 
-void Cell::ChangeColor() {
-    color = selected;
+Cell *Grid::GetCell(sf::Vector2i coords) {
+  if (cells_map_.count({coords.x, coords.y})) return cells_map_[{coords.x, coords.y}];
+  return nullptr;
 }
 
-void Grid::Build(sf::RenderWindow& window) {
-    for (int x = Cx; x > 50; x -= dx) {
-        sf::RectangleShape line(sf::Vector2f(4.f, 1550.f));
-        line.setFillColor(grid_color);
-        line.move(x, 50);
-        window.draw(line);
+std::vector<sf::Vector2i> Grid::GetWay(sf::Vector2i start, sf::Vector2i target) {
+  std::vector<sf::Vector2i> way;
+  // Temporary // TODO: Gosha
+  for (int x = start.x; x != target.x; x += (x  < target.x ? 1 : -1)) {
+    way.push_back({x, start.y});
+  }
 
-        std::string s = std::to_string((x - Cx) / dx);
-        sf::Font temp_font;
-        temp_font.loadFromFile("../assets/texture/19676.ttf");
-        sf::Text num(s, temp_font, 40);
-        num.setColor(grid_color);
-        num.move(x - 8, 0);
-        window.draw(num);
-    }
-    for (int x = Cx; x < 2000; x += dx) {
-        sf::RectangleShape line(sf::Vector2f(4.f, 1550.f));
-        line.setFillColor(grid_color);
-        line.move(x, 50);
-        window.draw(line);
+  for (int y = start.y; y != target.y; y += (y < target.y ? 1 : -1)) {
+    way.push_back({target.x, y});
+  }
+  way.push_back({target.x, target.y});
 
-        std::string s = std::to_string((x - Cx) / dx);
-        sf::Font temp_font;
-        temp_font.loadFromFile("../assets/texture/19676.ttf");
-        sf::Text num(s, temp_font, 40);
-        num.setColor(grid_color);
-        num.move(x - 8, 0);
-        window.draw(num);
-    }
-    for (int y = Cy; y > 50; y -= dy) {
-        sf::RectangleShape line(sf::Vector2f(1950.f, 4.f));
-        line.setFillColor(grid_color);
-        line.move(50, y);
-        window.draw(line);
-
-        std::string s = std::to_string(-(y - Cy) / dy);
-        sf::Font temp_font;
-        temp_font.loadFromFile("../assets/texture/19676.ttf");
-        sf::Text num(s, temp_font, 40);
-        num.setColor(grid_color);
-        num.move(9, y - 15);
-        window.draw(num);
-    }
-    for (int y = Cy; y < 1600; y += dy) {
-        sf::RectangleShape line(sf::Vector2f(1950.f, 4.f));
-        line.setFillColor(grid_color);
-        line.move(50, y);
-        window.draw(line);
-
-        std::string s = std::to_string(-(y - Cy) / dy);
-        sf::Font temp_font;
-        temp_font.loadFromFile("../assets/texture/19676.ttf");
-        sf::Text num(s, temp_font, 40);
-        num.setColor(grid_color);
-        num.move(9, y - 15);
-        window.draw(num);
-    }
+  // End Temporary
+  return way;
 }
 
-void Grid::SetCells(std::vector<std::vector<int>>& maze) {
-    Cell c(0, 0, 0, 0, sf::Vector2f(0, 0), sf::Color::Black);
-    cells.assign(maze_size, std::vector<Cell> (maze_size, c));
-    for (int i = 0; i < maze_size; ++i) {
-        for (int j = 0; j < maze_size; ++j) {
-            sf::Color temp_col = sf::Color::Black;
-            if (maze[i][j]) temp_col = sf::Color::Yellow;
-            Cell cell(i, j, dx, dy, GetPoint({i, j}), temp_col);
-            cells[i][j] = cell;
-
-        }
-    }
-}
-
-
-void Grid::BuildCells() {
-  maze::AddItem(1, 10);
-  std::vector<std::vector<int>> cur_maze = maze::Generate(30, 30, 0);
-  int sz = cur_maze.size();
-    for (int i = 0; i < sz; ++i) {
-      for (int j = 0; j < sz; ++j){
-        if (cur_maze[j][i] == 1) {
-          Cell *cur_cell = new Cell(i, j);
-          sf::Vector2f pos(i * dx, j * dy);
-          cur_cell->SetSpritePosition(pos);
-        }
+void Grid::Select() {
+  int dist = players_[turn_]->GetSpeed();
+  auto position = players_[turn_]->GetCoords();
+  for (int y = -dist; y <= dist; ++y) {
+    for (int x = -dist; x <= dist; ++x) {
+      if (x * x + y * y > dist * dist) continue;
+      Cell* cell = GetCell(x + position.x, y + position.y);
+      if (cell) {
+        cell->SetTexture("../assets/texture/default_near_cell.png");
       }
     }
+  }
 }
-
-
-sf::Vector2f Grid::GetPoint(sf::Vector2i node) {
-    int x = node.x;
-    int y = node.y;
-    float x_wind = x * dx + Cx - dx / 2.0;
-    float y_wind = - y * dy + Cy - dy / 2.0;
-    return {x_wind, y_wind};
-}
-
-
-sf::Vector2f Grid::GetSize(sf::Vector2i node) {
-    return {float(dx), float(dy)};
-}
-
-void Grid::MoveCenter(sf::Vector2i pos) {
-    Cx = pos.x;
-    Cy = pos.y;
-}
-
-void Grid::MoveLeft() {
-    Cx += move_velocity_x;
-}
-
-void Grid::MoveRight() {
-    Cx -= move_velocity_x;
-}
-
-void Grid::MoveDown() {
-    Cy -= move_velocity_y;
-}
-
-void Grid::MoveUp() {
-    Cy += move_velocity_y;
-}
-
-void Grid::ScaleBigger() {
-    dx += scale_velocity_x;
-    dy += scale_velocity_y;
-}
-
-void Grid::ScaleSmaller() {
-    dx -= scale_velocity_x;
-    dy -= scale_velocity_y;
-}
-
-void Grid::ChangeColor(sf::Vector2i mouse) {
-    for (int i = 0; i < maze_size; ++i) {
-        for (int j = 0; j < maze_size; ++j) {
-            if (cells[i][j].IsClicked(mouse)) {
-                cells[i][j].ChangeColor();
-                return;
-            }
-        }
-    }
-
-}*/
