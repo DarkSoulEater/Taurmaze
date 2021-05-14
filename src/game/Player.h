@@ -17,6 +17,8 @@ class Player : public Object {
 
   bool InMove() const;
 
+  void EndTurn();
+
   int GetHealthPoints() const;
 
   void SetHealthPoints(int new_health);
@@ -39,11 +41,12 @@ class Player : public Object {
   int defence = 10;
   int speed = 3;
   int vision = 3;
+
   Grid& grid_;
+
   std::vector<sf::Vector2f> targets_;
   float move_speed = 0.5f;
   sf::Vector2i coords_ = {0, 0 };
-
 };
 
 #endif //TAURMAZE_SRC_GAME_PLAYER_H_

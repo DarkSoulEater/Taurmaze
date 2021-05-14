@@ -28,6 +28,13 @@ void Grid::Update() {
   if (!is_bot_[turn_]) {
     Select();
 
+    Cell* player_cell = GetCell(players_[turn_]->GetCoords());
+    if (player_cell->buff_) {
+      player_cell->buff_->Apply(*players_[turn_]);
+      delete player_cell->buff_;
+      player_cell->buff_ = nullptr;
+    }
+
     if (input::GetKeyDown(input::KeyCode::MOUSE_0)) {
       sf::Vector2i target = ToGridCoords(input::GetMouseWorldPosition());
       auto way = GetWay(players_[turn_]->GetCoords(), target);

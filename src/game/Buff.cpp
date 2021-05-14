@@ -22,7 +22,8 @@ void Buff::SetPosition(sf::Vector2f position) {
 }
 
 void Buff::Apply(Player& obj) {
-  // TODO:
+  bf_DefaultEffect(obj);
+  // TODO CALLBACK
 }
 
 void Buff::SetEffect(std::function<void(Player &)> function) {

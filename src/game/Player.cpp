@@ -38,6 +38,10 @@ bool Player::InMove() const {
   return !targets_.empty();
 }
 
+void Player::EndTurn() {
+  // TODO:
+}
+
 int Player::GetHealthPoints() const {
   return health_points;
 }
