@@ -37,10 +37,10 @@ class Player : public Object {
 
   sf::Vector2i GetCoords();
  private:
-  int health_points = 10;
-  int defence = 10;
-  int speed = 3;
-  int vision = 3;
+  int health_points_ = 10;
+  int attack_ = 10;
+  int move_range_ = 3;
+  int vision_range_ = 3;
 
   Grid& grid_;
 

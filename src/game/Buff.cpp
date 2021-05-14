@@ -9,12 +9,6 @@ Buff::Buff(const char *path) : sprite_(asset::LoadTexture(path)) {
 }
 
 Buff* Buff::CreateBuff(BuffType type, float effect_time) {
-  switch (type) {
-    case BuffType::None:
-      Buff* buff_ = new Buff("");
-      buff_->effect_ = bf_DefaultEffect;
-
-  }
   return new Buff(); // TODO
 }
 
