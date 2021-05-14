@@ -69,6 +69,8 @@ void Grid::Update() {
           players_[turn_]->SetTargets(targets);
         }
       }
+    } else {
+
     }
   }
 
