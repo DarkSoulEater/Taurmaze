@@ -7,8 +7,17 @@
 void bf_DefaultEffect(Player& obj);
 void bf_DefaultRollback(Player& obj);
 
+void bf_Health(Player& obj){
+  obj.SetHealthPoints(obj.GetHealthPoints() + 1);
+}
+
 enum class BuffType {
-  None
+  None,
+  Health,
+  Attack,
+  Defence,
+  Speed,
+  Vision
 };
 
 class Buff {
