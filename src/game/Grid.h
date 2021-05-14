@@ -24,6 +24,12 @@ public:
   Buff* buff_ = nullptr;
 
   const Grid &grid_;
+
+  struct {
+    bool visibility = 0;
+    bool on_way = 0;
+    bool on_mouse = 0;
+  } state_;
 };
 
 struct LevelOption {
@@ -31,7 +37,7 @@ struct LevelOption {
   int height = 15;
   unsigned int seed = 0;
 
-  uint32_t player_count = 1;
+  uint32_t player_count = 2;
 };
 
 class Grid : public Object {
@@ -50,6 +56,8 @@ public:
 
   Cell* GetCell(int x, int y);
   Cell* GetCell(sf::Vector2i coords);
+
+  void NextTurn();
 
  private:
   sf::Vector2i scale_ = {100, 100};

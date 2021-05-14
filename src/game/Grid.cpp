@@ -11,12 +11,27 @@
 Cell::Cell(int x, int y, Grid& grid) : Object("../assets/texture/default_cell.png"), position_({x, y}), grid_(grid) {}
 
 void Cell::Draw(sf::RenderWindow & window) {
+  if (state_.visibility == 0) {
+    SetTexture("../assets/texture/default_cell.png");
+  } else {
+    SetTexture("../assets/texture/default_near_cell.png");
+    if (state_.on_way) {
+      //SetTexture();
+    }
+    if (state_.on_mouse) {
+      SetTexture("../assets/texture/default_select_cell.png");
+    }
+  }
+
   Object::Draw(window);
+
   if (buff_) buff_->Draw(window);
 }
 
 void Cell::LastUpdate() {
-  SetTexture("../assets/texture/default_cell.png");
+  state_.visibility = false;
+  state_.on_mouse = false;
+  state_.on_way = false;
 }
 
 void Cell::CreateBuff(BuffType type) {
@@ -35,22 +50,31 @@ void Grid::Update() {
       player_cell->buff_ = nullptr;
     }
 
-    if (input::GetKeyDown(input::KeyCode::MOUSE_0)) {
-      sf::Vector2i target = ToGridCoords(input::GetMouseWorldPosition());
-      auto way = GetWay(players_[turn_]->GetCoords(), target);
-      if (!way.empty() && way.size() <= players_[turn_]->GetVision()) {
-        std::vector<sf::Vector2f> targets;
-        for (auto point : way) {
-          targets.push_back(ToWorldCoords(point));
+    static bool Moved = false;
+    if (!players_[turn_]->InMove()) {
+      if (Moved) {
+        Moved = false;
+        NextTurn();
+      }
+
+      if (input::GetKeyDown(input::KeyCode::MOUSE_0)) {
+        sf::Vector2i target = ToGridCoords(input::GetMouseWorldPosition());
+        auto way = GetWay(players_[turn_]->GetCoords(), target);
+        if (!way.empty() && way.size() <= players_[turn_]->GetVision()) {
+          Moved = true;
+          std::vector<sf::Vector2f> targets;
+          for (auto point : way) {
+            targets.push_back(ToWorldCoords(point));
+          }
+          players_[turn_]->SetTargets(targets);
         }
-        players_[turn_]->SetTargets(targets);
       }
     }
   }
 
   // TMP
   auto cell = GetCell(ToGridCoords(input::GetMouseWorldPosition()));
-  if (cell) cell->SetTexture("../assets/texture/default_select_cell.png");
+  if (cell) cell->state_.on_mouse = true;
 }
 
 void Grid::Draw(sf::RenderWindow &window) {
@@ -190,21 +214,6 @@ std::vector<sf::Vector2i> Grid::GetWay(sf::Vector2i start, sf::Vector2i target) 
   }
 
   return way;
-
-  // Temporary // TODO: Gosha
-
-  //
-  for (int x = start.x; x != target.x; x += (x  < target.x ? 1 : -1)) {
-    way.push_back({x, start.y});
-  }
-
-  for (int y = start.y; y != target.y; y += (y < target.y ? 1 : -1)) {
-    way.push_back({target.x, y});
-  }
-  way.push_back({target.x, target.y});
-
-  // End Temporary
-  return way;
 }
 
 void Grid::Select() {
@@ -215,8 +224,12 @@ void Grid::Select() {
       if (x * x + y * y > dist * dist) continue;
       Cell* cell = GetCell(x + position.x, y + position.y);
       if (cell) {
-        cell->SetTexture("../assets/texture/default_near_cell.png");
+        cell->state_.visibility = true;
       }
     }
   }
+}
+
+void Grid::NextTurn() {
+  turn_ = (turn_ + 1) % players_.size(); // TODO: IF DEAD
 }
