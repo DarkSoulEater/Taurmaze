@@ -1,5 +1,8 @@
 #include <iostream>
 #include <vector>
+#include <queue>
+#include <map>
+#include <unordered_map>
 #include "Grid.h"
 #include "maze.h"
 #include "../util/input.h"
@@ -7,23 +10,34 @@
 
 Cell::Cell(int x, int y, Grid& grid) : Object("../assets/texture/default_cell.png"), position_({x, y}), grid_(grid) {}
 
+void Cell::Draw(sf::RenderWindow & window) {
+  Object::Draw(window);
+  if (buff_) buff_->Draw(window);
+}
+
 void Cell::LastUpdate() {
   SetTexture("../assets/texture/default_cell.png");
+}
+
+void Cell::CreateBuff(BuffType type) {
+  buff_ = Buff::CreateBuff(type, 5.0f);
+  buff_->SetPosition(sprite_.getPosition());
 }
 
 void Grid::Update() {
   if (!is_bot_[turn_]) {
     Select();
 
-    if (input::GetKeyDown(input::KeyCode::E)) {
+    if (input::GetKeyDown(input::KeyCode::MOUSE_0)) {
       sf::Vector2i target = ToGridCoords(input::GetMouseWorldPosition());
       auto way = GetWay(players_[turn_]->GetCoords(), target);
-      std::vector<sf::Vector2f> targets;
-      for (auto point : way) {
-        targets.push_back(ToWorldCoords(point));
+      if (!way.empty() && way.size() <= players_[turn_]->GetVision()) {
+        std::vector<sf::Vector2f> targets;
+        for (auto point : way) {
+          targets.push_back(ToWorldCoords(point));
+        }
+        players_[turn_]->SetTargets(targets);
       }
-      std::reverse(targets.begin(), targets.end());
-      players_[turn_]->SetTargets(targets);
     }
   }
 
@@ -56,6 +70,8 @@ void Grid::Draw(sf::RenderWindow &window) {
 void Grid::CreateLevel(LevelOption option) {
   // Create logic maze
   maze::AddItem(1, 10);
+  maze::AddItem(2, 10);
+  //maze::AddItem(3, 10);
   maze_ = maze::Generate(option.height, option.width, option.seed);
 
   // Create physics maze
@@ -64,13 +80,19 @@ void Grid::CreateLevel(LevelOption option) {
 
   for (size_t y = 0; y < maze_height; ++y) {
     for (size_t x = 0; x < maze_width; ++x){
-      if (maze_[y][x] == 1) {
+      std::cout << maze_[y][x] << " ";
+      if (maze_[y][x] > 0) {
         Cell* cell = new Cell(x, y, *this);
         cells_.push_back(cell);
         cells_map_[{x, y}] = cell;
         cell->SetSpritePosition({float(x * scale_.x), float(y * scale_.y) });
+
+        if (maze_[y][x] > 1) {
+          cell->CreateBuff(BuffType::None);
+        }
       }
     }
+    std::cout << "\n";
   }
 
   // Create players
@@ -114,7 +136,57 @@ Cell *Grid::GetCell(sf::Vector2i coords) {
 
 std::vector<sf::Vector2i> Grid::GetWay(sf::Vector2i start, sf::Vector2i target) {
   std::vector<sf::Vector2i> way;
+
+  std::map<Cell*, Cell*> parent;
+  std::queue<std::tuple<int, int, int>> q;
+
+  q.push(std::make_tuple(start.x, start.y, 0));
+  while (!q.empty()) {
+    int x, y, dst;
+    std::tie(x, y, dst) = q.front();
+    q.pop();
+
+    if (target.x == x && target.y == y) {
+      break;
+    }
+
+    Cell* cell, *now_cell = GetCell(x, y);
+    if ((cell = GetCell(x + 1, y)) && parent.count(cell) == 0) {
+      parent[cell] = now_cell;
+      q.push(std::make_tuple(x + 1, y, dst + 1));
+    }
+
+    if ((cell = GetCell(x - 1, y)) && parent.count(cell) == 0) {
+      parent[cell] = now_cell;
+      q.push(std::make_tuple(x - 1, y, dst + 1));
+    }
+
+    if ((cell = GetCell(x, y + 1)) && parent.count(cell) == 0) {
+      parent[cell] = now_cell;
+      q.push(std::make_tuple(x, y + 1, dst + 1));
+    }
+
+    if ((cell = GetCell(x, y - 1)) && parent.count(cell) == 0) {
+      parent[cell] = now_cell;
+      q.push(std::make_tuple(x, y - 1, dst + 1));
+    }
+  }
+
+  if (parent.count(GetCell(target)) == 0) {
+    return way;
+  }
+
+  Cell* cell = GetCell(target);
+  while (cell->position_ != start) {
+    way.push_back(cell->position_);
+    cell = parent[cell];
+  }
+
+  return way;
+
   // Temporary // TODO: Gosha
+
+  //
   for (int x = start.x; x != target.x; x += (x  < target.x ? 1 : -1)) {
     way.push_back({x, start.y});
   }

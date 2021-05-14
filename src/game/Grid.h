@@ -5,6 +5,7 @@
 #include "core/Object.h"
 #include "Player.h"
 #include <map>
+#include "Buff.h"
 
 class Grid;
 
@@ -12,9 +13,15 @@ class Cell : public Object {
 public:
   Cell(int x, int y, Grid &grid);
 
+  void Draw(sf::RenderWindow &) override;
+
   void LastUpdate() override;
 
+  void CreateBuff(BuffType type);
+
   sf::Vector2i position_;
+
+  Buff* buff_ = nullptr;
 
   const Grid &grid_;
 };
