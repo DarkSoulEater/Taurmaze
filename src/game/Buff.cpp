@@ -59,22 +59,22 @@ Buff* Buff::CreateBuff(BuffType type, float effect_time) {
       buff->rollback_ = bf_HealthRollback;
       break;
     case BuffType::Attack:
-      buff = new Buff("");  //path to attack
+      buff = new Buff("");  //path to attack_
       buff->effect_ = bf_Attack;
       buff->rollback_ = bf_AttackRollback;
       break;
     case BuffType::Defence:
-      buff = new Buff(""); //path to defence
+      buff = new Buff(""); //path to defence_
       buff->effect_ = bf_Defence;
       buff->rollback_ = bf_DefenceRollback;
       break;
     case BuffType::Speed:
-      buff = new Buff("");  //path to speed
+      buff = new Buff("");  //path to move_range_
       buff->effect_ = bf_Speed;
       buff->rollback_ = bf_SpeedRollback;
       break;
     case BuffType::Vision:
-      buff = new Buff("");  //path to vision
+      buff = new Buff("");  //path to vision_range_
       buff->effect_ = bf_Vision;
       buff->rollback_ = bf_VisionRollback;
       break;

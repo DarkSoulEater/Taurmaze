@@ -43,43 +43,43 @@ void Player::EndTurn() {
 }
 
 int Player::GetHealthPoints() const {
-  return health_points;
+  return health_points_;
 }
 
 void Player::SetHealthPoints(int new_health) {
-  health_points = new_health;
+  health_points_ = new_health;
 }
 
 int Player::GetAttack() const {
-  return attack;
+  return attack_;
 };
 
 void Player::SetAttack(int new_attack) {
-  attack = new_attack;
+  attack_ = new_attack;
 }
 
 int Player::GetDefence() const {
-  return defence;
+  return defence_;
 }
 
 void Player::SetDefence(int new_defence) {
-  defence = new_defence;
+  defence_ = new_defence;
 }
 
 int Player::GetSpeed() const {
-  return speed;
+  return move_range_;
 }
 
 void Player::SetSpeed(int new_speed) {
-  speed = new_speed;
+  move_range_ = new_speed;
 }
 
 int Player::GetVision() const {
-  return vision;
+  return vision_range_;
 }
 
 void Player::SetVision(int new_vision) {
-  vision = new_vision;
+  vision_range_ = new_vision;
 }
 
 sf::Vector2i Player::GetCoords() {

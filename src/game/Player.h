@@ -23,6 +23,10 @@ class Player : public Object {
 
   void SetHealthPoints(int new_health);
 
+  int GetAttack() const;
+
+  void SetAttack(int new_attack);
+
   int GetDefence() const;
 
   void SetDefence(int new_defence);
@@ -39,6 +43,7 @@ class Player : public Object {
  private:
   int health_points_ = 10;
   int attack_ = 10;
+  int defence_ = 5;
   int move_range_ = 3;
   int vision_range_ = 3;
 
