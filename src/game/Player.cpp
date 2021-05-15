@@ -50,6 +50,14 @@ void Player::SetHealthPoints(int new_health) {
   health_points = new_health;
 }
 
+int Player::GetAttack() const {
+  return attack;
+};
+
+void Player::SetAttack(int new_attack) {
+  attack = new_attack;
+}
+
 int Player::GetDefence() const {
   return defence;
 }

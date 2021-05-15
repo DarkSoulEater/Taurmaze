@@ -6,10 +6,16 @@
 
 void bf_DefaultEffect(Player& obj);
 void bf_DefaultRollback(Player& obj);
-
-void bf_Health(Player& obj){
-  obj.SetHealthPoints(obj.GetHealthPoints() + 1);
-}
+void bf_Health(Player& obj);
+void bf_HealthRollback(Player& obj);
+void bf_Attack(Player& obj);
+void bf_AttackRollback(Player& obj);
+void bf_Defence(Player& obj);
+void bf_DefenceRollback(Player& obj);
+void bf_Speed(Player& obj);
+void bf_SpeedRollback(Player& obj);
+void bf_Vision(Player& obj);
+void bf_VisionRollback(Player& obj);
 
 enum class BuffType {
   None,
