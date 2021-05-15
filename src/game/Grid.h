@@ -59,6 +59,8 @@ public:
 
   void NextTurn();
 
+  void ToBattle(int ind_first_pl, int ind_second_pl);
+
  private:
   sf::Vector2i scale_ = {100, 100};
 

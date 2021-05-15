@@ -12,7 +12,7 @@ Cell::Cell(int x, int y, Grid& grid) : Object("../assets/texture/default_cell.pn
 
 void Cell::Draw(sf::RenderWindow & window) {
   if (state_.visibility == 0) {
-    SetTexture("../assets/texture/default_cell.png");
+    SetTexture("../assets/texture/dungeon_cell_1.jpg");
   } else {
     SetTexture("../assets/texture/default_near_cell.png");
     if (state_.on_way) {
@@ -40,15 +40,17 @@ void Cell::CreateBuff(BuffType type) {
 }
 
 void Grid::Update() {
+  // Apply Buff
+  Cell* player_cell = GetCell(players_[turn_]->GetCoords());
+  if (player_cell->buff_) {
+    player_cell->buff_->Apply(*players_[turn_]);
+    delete player_cell->buff_;
+    player_cell->buff_ = nullptr;
+  }
+
+
   if (!is_bot_[turn_]) {
     Select();
-
-    Cell* player_cell = GetCell(players_[turn_]->GetCoords());
-    if (player_cell->buff_) {
-      player_cell->buff_->Apply(*players_[turn_]);
-      delete player_cell->buff_;
-      player_cell->buff_ = nullptr;
-    }
 
     static bool Moved = false;
     if (!players_[turn_]->InMove()) {
@@ -69,6 +71,8 @@ void Grid::Update() {
           players_[turn_]->SetTargets(targets);
         }
       }
+    } else {
+
     }
   }
 
@@ -232,4 +236,9 @@ void Grid::Select() {
 
 void Grid::NextTurn() {
   turn_ = (turn_ + 1) % players_.size(); // TODO: IF DEAD
+}
+
+void Grid::ToBattle(int ind_first_pl, int ind_second_pl) {
+  // TODO: ADD BATTLE // DELETE IN PLAYERS_!!!
+  std::cout << "Battle\n";
 }
