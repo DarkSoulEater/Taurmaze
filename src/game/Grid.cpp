@@ -125,9 +125,13 @@ void Grid::Draw(sf::RenderWindow &window) {
 
 void Grid::CreateLevel(LevelOption option) {
   // Create logic maze
-  maze::AddItem(1, 10);
-  maze::AddItem(2, 10);
-  //maze::AddItem(3, 10);
+  maze::AddItem(1, settings::BuffQuantity); //tile
+  maze::AddItem(2, 10); //health buff
+  maze::AddItem(3, 10); //attack buff
+  maze::AddItem(4, 10); //defence buff
+  maze::AddItem(5, 10); //move_range buff
+  maze::AddItem(6, 10); //vision buff
+
   maze_ = maze::Generate(option.height, option.width, option.seed);
 
   // Create physics maze
@@ -143,8 +147,22 @@ void Grid::CreateLevel(LevelOption option) {
         cells_map_[{x, y}] = cell;
         cell->SetPosition({float(x * scale_.x), float(y * scale_.y) });
 
-        if (maze_[y][x] > 1) {
-          cell->CreateBuff(BuffType::None);
+        switch (maze_[y][x]) {
+          case 2:
+            cell->CreateBuff(BuffType::Health);
+            break;
+          case 3:
+            cell->CreateBuff(BuffType::Attack);
+            break;
+          case 4:
+            cell->CreateBuff(BuffType::Defence);
+            break;
+          case 5:
+            cell->CreateBuff(BuffType::MoveRange);
+            break;
+          case 6:
+            cell->CreateBuff(BuffType::Vision);
+            break;
         }
       }
     }
@@ -156,7 +174,26 @@ void Grid::CreateLevel(LevelOption option) {
     Player* player = new Player(*this);
     players_.push_back(player);
     is_bot_.push_back(false);
-    player->SetPosition(ToWorldCoords({1, 1}));
+    player->SetPosition(ToWorldCoords({0, 0}));
+  }
+
+  while(true){
+    bool ch = 1;
+    for(int i = 0; i < players_.size() && ch; ++i){
+      for(int j = 0; j < players_.size() && ch; ++j){
+        if(i == j) continue;
+        if(abs(players_[i]->GetCoords().x - players_[j]->GetCoords().x) < 4 ||
+           abs(players_[i]->GetCoords().y - players_[j]->GetCoords().y) < 4){
+          ch = 0;
+        }
+      }
+    }
+    if(ch) break;
+    for(auto& player : players_){
+      do {
+        player->SetPosition(ToWorldCoords({static_cast<int>(rand() % maze_height), static_cast<int>(rand() % maze_width)}));
+      } while(maze_[player->GetCoords().x][player->GetCoords().y] == 0);
+    }
   }
 }
 
@@ -242,7 +279,7 @@ std::vector<sf::Vector2i> Grid::GetWay(sf::Vector2i start, sf::Vector2i target) 
 }
 
 void Grid::Select() {
-  int dist = players_[turn_]->GetSpeed();
+  int dist = players_[turn_]->GetMoveRange();
   auto position = players_[turn_]->GetCoords();
   for (int y = -dist; y <= dist; ++y) {
     for (int x = -dist; x <= dist; ++x) {

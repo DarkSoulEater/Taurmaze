@@ -6,7 +6,7 @@ namespace settings {
 extern float CellSize;
 extern float HeroesSize;
 extern float BuffSize;
-
+extern int BuffQuantity;
 // Debug
 extern bool IsDebug;
 extern bool DDrawCoordsGrid;

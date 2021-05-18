@@ -100,12 +100,12 @@ void Player::SetDefence(int new_defence) {
   defence_ = new_defence;
 }
 
-int Player::GetSpeed() const {
+int Player::GetMoveRange() const {
   return move_range_;
 }
 
-void Player::SetSpeed(int new_speed) {
-  move_range_ = new_speed;
+void Player::SetMoveRange(int new_move_range) {
+  move_range_ = new_move_range;
 }
 
 int Player::GetVision() const {

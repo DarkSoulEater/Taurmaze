@@ -12,8 +12,8 @@ void bf_Attack(Player& obj);
 void bf_AttackRollback(Player& obj);
 void bf_Defence(Player& obj);
 void bf_DefenceRollback(Player& obj);
-void bf_Speed(Player& obj);
-void bf_SpeedRollback(Player& obj);
+void bf_MoveRange(Player& obj);
+void bf_MoveRangeRollback(Player& obj);
 void bf_Vision(Player& obj);
 void bf_VisionRollback(Player& obj);
 
@@ -22,7 +22,7 @@ enum class BuffType {
   Health,
   Attack,
   Defence,
-  Speed,
+  MoveRange,
   Vision
 };
 

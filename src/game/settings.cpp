@@ -5,6 +5,7 @@ namespace settings {
   float CellSize = 100.0f;
   float HeroesSize = 100.0f;
   float BuffSize = 50.0f;
+  int BuffQuantity = 300;
 
 // Debug
   bool IsDebug = true;

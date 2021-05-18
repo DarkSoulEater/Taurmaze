@@ -27,12 +27,12 @@ void bf_DefenceRollback(Player& obj){
   obj.SetDefence(obj.GetDefence() - 1);
 }
 
-void bf_Speed(Player& obj){
-  obj.SetSpeed(obj.GetSpeed() + 1);
+void bf_MoveRange(Player& obj){
+  obj.SetMoveRange(obj.GetMoveRange() + 1);
 }
 
-void bf_SpeedRollback(Player& obj){
-  obj.SetSpeed(obj.GetSpeed() - 1);
+void bf_MoveRangeRollback(Player& obj){
+  obj.SetMoveRange(obj.GetMoveRange() - 1);
 }
 
 void bf_Vision(Player& obj){
@@ -43,14 +43,9 @@ void bf_VisionRollback(Player& obj){
   obj.SetVision(obj.GetVision() - 1);
 }
 
-
 Buff::Buff(const char *path) : sprite_(asset::LoadTexture(path)) {
   int texture_rect_id = rand() % 100;
   int texture_size = 50;
-  sprite_.setTextureRect(sf::Rect<int>(
-      texture_size * (texture_rect_id % 10),
-      texture_size * (texture_rect_id / 10),
-      texture_size, texture_size));
 
   sprite_.setOrigin(sprite_.getTextureRect().width / 2, sprite_.getTextureRect().height / 2);
   sprite_.setScale({settings::BuffSize / texture_size, settings::BuffSize / texture_size});
@@ -60,30 +55,30 @@ Buff* Buff::CreateBuff(BuffType type, float effect_time) {
   Buff* buff;
   switch(type){
     case BuffType::None:
-      buff = new Buff();
+      buff = new Buff("../assets/texture/buff-tiles-1.png");
       break;
     case BuffType::Health:
-      buff = new Buff("");  //path to health
+      buff = new Buff("../assets/texture/health_buff.png");
       buff->effect_ = bf_Health;
       buff->rollback_ = bf_HealthRollback;
       break;
     case BuffType::Attack:
-      buff = new Buff("");  //path to attack_
+      buff = new Buff("../assets/texture/attack_buff.png");
       buff->effect_ = bf_Attack;
       buff->rollback_ = bf_AttackRollback;
       break;
     case BuffType::Defence:
-      buff = new Buff(""); //path to defence_
+      buff = new Buff("../assets/texture/defence_buff.png"); //path to defence_
       buff->effect_ = bf_Defence;
       buff->rollback_ = bf_DefenceRollback;
       break;
-    case BuffType::Speed:
-      buff = new Buff("");  //path to move_range_
-      buff->effect_ = bf_Speed;
-      buff->rollback_ = bf_SpeedRollback;
+    case BuffType::MoveRange:
+      buff = new Buff("../assets/texture/move_range_buff.png");  //path to move_range_
+      buff->effect_ = bf_MoveRange;
+      buff->rollback_ = bf_MoveRangeRollback;
       break;
     case BuffType::Vision:
-      buff = new Buff("");  //path to vision_range_
+      buff = new Buff("../assets/texture/vision_buff.png");  //path to vision_range_
       buff->effect_ = bf_Vision;
       buff->rollback_ = bf_VisionRollback;
       break;

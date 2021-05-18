@@ -33,9 +33,9 @@ class Player : public Object {
 
   void SetDefence(int new_defence);
 
-  int GetSpeed() const;
+  int GetMoveRange() const;
 
-  void SetSpeed(int new_speed);
+  void SetMoveRange(int new_move_range);
 
   int GetVision() const;
 
