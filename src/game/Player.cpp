@@ -26,7 +26,6 @@ void Player::Update() {
 
     SetPosition(sprite_.getPosition() + dir * move_speed);
   }
-  coords_ = grid_.ToGridCoords(sprite_.getPosition());
 }
 
 void Player::Draw(sf::RenderWindow &window) {
@@ -58,6 +57,12 @@ void Player::Draw(sf::RenderWindow &window) {
     window.draw(circle_shape);
   }
 }
+
+void Player::SetPosition(const sf::Vector2f &position) {
+  Object::SetPosition(position);
+  coords_ = grid_.ToGridCoords(sprite_.getPosition());
+}
+
 
 void Player::SetTargets(const std::vector<sf::Vector2f>& targets) {
   targets_ = targets;

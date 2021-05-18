@@ -13,6 +13,8 @@ class Player : public Object {
 
   void Draw(sf::RenderWindow &) override;
 
+  void SetPosition(const sf::Vector2f &position) override;
+
   void SetTargets(const std::vector<sf::Vector2f>&);
 
   bool InMove() const;
