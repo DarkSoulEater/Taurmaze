@@ -45,14 +45,43 @@ void Core::HandleEvent() {
   CallOnClick();
   CallUpdate();
 }
-
+#include "../util/asset.h"
 void Core::DrawFrame() {
-  window_.clear(sf::Color::White);
+  if (input::GetKeyDown(input::KeyCode::E)) {
+    sf::RenderTexture texture;
+    texture.create(1920, 1080);
+    texture.clear(sf::Color::Black);
 
-  window_.setView(main_camera);
-  bool view_flag = true;
+    texture.setView(texture.getDefaultView());
+    bool view_flag = false;
+
+    for (auto obj: Object::buffer_) {
+      if (view_flag == false && obj.first >= 0 && obj.first < 10) {
+        texture.setView(main_camera);
+        view_flag = true;
+      }
+      if (view_flag && obj.first >= 10) {
+        view_flag = false;
+        texture.setView(texture.getDefaultView());
+      }
+      obj.second->Draw(texture);
+    }
+    texture.display();
+    sf::Texture tex = texture.getTexture();
+    sf::Image image = tex.copyToImage();
+    image.saveToFile("../assets/texture/wind.png");
+  }
+
+  window_.clear(sf::Color::Black);
+
+  window_.setView(window_.getDefaultView());
+  bool view_flag = false;
 
   for (auto obj: Object::buffer_) {
+    if (view_flag == false && obj.first >= 0 && obj.first < 10) {
+      window_.setView(main_camera);
+      view_flag = true;
+    }
     if (view_flag && obj.first >= 10) {
       view_flag = false;
       window_.setView(window_.getDefaultView());

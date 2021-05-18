@@ -6,26 +6,47 @@
 #include "Grid.h"
 #include "maze.h"
 #include "../util/input.h"
-#include "settings.h"
+#include "../util/asset.h"
 
-Cell::Cell(int x, int y, Grid& grid) : Object("../assets/texture/default_cell.png"), position_({x, y}), grid_(grid) {}
+Cell::Cell(int x, int y, Grid& grid)
+  : Object(asset::path::t_StoneCellTiles),
+    position_({x, y}),
+    grid_(grid),
+    shadow_shape_({settings::CellSize, settings::CellSize}) {
+
+  int texture_rect_id = rand() % 16;
+  SetTextureRect(sf::Rect<int>(
+       118 * (texture_rect_id % 4),
+       118 * (texture_rect_id / 4),
+      118, 118));
+  sprite_.setScale({settings::CellSize / 118, settings::CellSize / 118});
+
+  shadow_shape_.setOrigin(settings::CellSize / 2, settings::CellSize / 2);
+  shadow_shape_.setPosition(sprite_.getPosition());
+  shadow_shape_.setFillColor(sf::Color(0, 0, 0, 180));
+}
 
 void Cell::Draw(sf::RenderWindow & window) {
+  Object::Draw(window);
+
   if (state_.visibility == 0) {
-    SetTexture("../assets/texture/dungeon_cell_1.jpg");
+    window.draw(shadow_shape_);
   } else {
-    SetTexture("../assets/texture/default_near_cell.png");
+    if (buff_ && !settings::DAlwaysDrawBuffs) buff_->Draw(window);
     if (state_.on_way) {
       //SetTexture();
     }
     if (state_.on_mouse) {
-      SetTexture("../assets/texture/default_select_cell.png");
+      //SetTexture("../assets/texture/default_select_cell.png");
     }
   }
 
-  Object::Draw(window);
+  if (buff_ && settings::DAlwaysDrawBuffs) buff_->Draw(window);
+}
 
-  if (buff_) buff_->Draw(window);
+void Cell::SetPosition(const sf::Vector2f &position) {
+  Object::SetPosition(position);
+  shadow_shape_.setPosition(position);
 }
 
 void Cell::LastUpdate() {
@@ -120,7 +141,7 @@ void Grid::CreateLevel(LevelOption option) {
         Cell* cell = new Cell(x, y, *this);
         cells_.push_back(cell);
         cells_map_[{x, y}] = cell;
-        cell->SetSpritePosition({float(x * scale_.x), float(y * scale_.y) });
+        cell->SetPosition({float(x * scale_.x), float(y * scale_.y) });
 
         if (maze_[y][x] > 1) {
           cell->CreateBuff(BuffType::None);

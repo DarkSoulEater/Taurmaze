@@ -2,6 +2,11 @@
 #include "asset.h"
 
 namespace asset {
+namespace path {
+  const char* t_StoneCellTiles = "../assets/texture/dungeon-tiles.jpg";
+
+} // namespace
+
 static std::map<const char*, sf::Texture> textures_library;
 
 sf::Texture& LoadTexture(const char* path) {

@@ -1,10 +1,19 @@
 #include "Player.h"
 #include "Grid.h"
+#include "../util/asset.h"
 
-Player::Player(Grid& grid) : Object("../assets/texture/default_player.png", 5), grid_(grid) {
+Player::Player(Grid& grid) : Object("../assets/texture/purple_slime.png", 5), grid_(grid) {
   coords_ = grid_.ToGridCoords(sprite_.getPosition());
+
+  //int texture_rect_id = 0;
+  int texture_size = 100;
+  //SetTextureRect(sf::Rect<int>(
+  //    118 * (texture_rect_id % 10),
+  //118 * (texture_rect_id / 10),
+  //    118, 118));
+  sprite_.setScale({settings::HeroesSize / texture_size, settings::HeroesSize / texture_size});
 }
-#include "iostream"
+
 void Player::Update() {
   if (InMove()) {
     auto dir = *targets_.rbegin() - sprite_.getPosition();
@@ -21,13 +30,32 @@ void Player::Update() {
 }
 
 void Player::Draw(sf::RenderWindow &window) {
+  sf::Texture tex(asset::LoadTexture("../assets/texture/perl.png"));
+  sf::Image im = tex.copyToImage();
+  auto sz = im.getSize();
+  for (size_t j = 0; j < sz.y; ++j) {
+    for (size_t i = 0; i < sz.x; ++i) {
+      sf::Color col(im.getPixel(i, j));
+      col.a = 100;
+      im.setPixel(i, j, col * sf::Color(255, 238, 204));
+    }
+  }
+  sf::Texture tex1;
+  tex1.loadFromImage(im);
+  sf::Sprite sp(tex1);
+  sp.setPosition(100, 100);
+  window.draw(sp);
+
   Object::Draw(window);
 
-  sf::CircleShape circle_shape;
-  circle_shape.setRadius(10);
-  circle_shape.setFillColor(sf::Color::Red);
-  circle_shape.setPosition(grid_.ToWorldCoords(coords_));
-  window.draw(circle_shape);
+  if (settings::DDrawPlayerOrigin) {
+    sf::CircleShape circle_shape;
+    circle_shape.setRadius(10);
+    circle_shape.setOrigin({5, 5});
+    circle_shape.setFillColor(sf::Color::Red);
+    circle_shape.setPosition(grid_.ToWorldCoords(coords_));
+    window.draw(circle_shape);
+  }
 }
 
 void Player::SetTargets(const std::vector<sf::Vector2f>& targets) {

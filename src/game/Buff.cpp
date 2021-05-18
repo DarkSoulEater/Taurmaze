@@ -1,5 +1,6 @@
 #include "Buff.h"
 #include "../util/asset.h"
+#include "settings.h"
 
 void bf_DefaultEffect(Player& obj) {}
 void bf_DefaultRollback(Player& obj) {}
@@ -44,7 +45,15 @@ void bf_VisionRollback(Player& obj){
 
 
 Buff::Buff(const char *path) : sprite_(asset::LoadTexture(path)) {
+  int texture_rect_id = rand() % 100;
+  int texture_size = 50;
+  sprite_.setTextureRect(sf::Rect<int>(
+      texture_size * (texture_rect_id % 10),
+      texture_size * (texture_rect_id / 10),
+      texture_size, texture_size));
+
   sprite_.setOrigin(sprite_.getTextureRect().width / 2, sprite_.getTextureRect().height / 2);
+  sprite_.setScale({settings::BuffSize / texture_size, settings::BuffSize / texture_size});
 }
 
 Buff* Buff::CreateBuff(BuffType type, float effect_time) {

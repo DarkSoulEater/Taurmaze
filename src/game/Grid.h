@@ -4,6 +4,7 @@
 #include "SFML/Graphics.hpp"
 #include "core/Object.h"
 #include "Player.h"
+#include "settings.h"
 #include <map>
 #include "Buff.h"
 
@@ -14,6 +15,8 @@ public:
   Cell(int x, int y, Grid &grid);
 
   void Draw(sf::RenderWindow &) override;
+
+  void SetPosition(const sf::Vector2f &position) override;
 
   void LastUpdate() override;
 
@@ -30,6 +33,9 @@ public:
     bool on_way = 0;
     bool on_mouse = 0;
   } state_;
+
+ private:
+  sf::RectangleShape shadow_shape_;
 };
 
 struct LevelOption {
@@ -62,7 +68,7 @@ public:
   void ToBattle(int ind_first_pl, int ind_second_pl);
 
  private:
-  sf::Vector2i scale_ = {100, 100};
+  sf::Vector2i scale_ = {int(settings::CellSize), int(settings::CellSize)};
 
   std::vector<Cell*> cells_;
   std::map<std::pair<int, int>, Cell*> cells_map_;

@@ -28,7 +28,7 @@ enum class BuffType {
 
 class Buff {
  public:
-  Buff(const char *path = "../assets/texture/default_buster.png");
+  Buff(const char *path = "../assets/texture/buff-tiles-1.png");
 
   static Buff* CreateBuff(BuffType type, float effect_time);
 

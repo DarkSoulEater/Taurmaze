@@ -53,6 +53,10 @@ class Object {
 
   virtual void Draw(sf::RenderWindow&);
 
+  virtual void Draw(sf::RenderTexture& texture) {
+    texture.draw(sprite_);
+  }
+
   virtual void SetSpritePosition(const sf::Vector2f& position);
 
 protected:

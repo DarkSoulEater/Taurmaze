@@ -5,6 +5,10 @@
 
 namespace asset {
 sf::Texture& LoadTexture(const char* path);
+
+  namespace path {
+    extern const char* t_StoneCellTiles;
+  }
 } // namespace
 
 
