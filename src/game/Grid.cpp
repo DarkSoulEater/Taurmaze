@@ -156,7 +156,7 @@ void Grid::CreateLevel(LevelOption option) {
     Player* player = new Player(*this);
     players_.push_back(player);
     is_bot_.push_back(false);
-    player->SetPosition(ToWorldCoords({0, 0}));
+    player->SetPosition(ToWorldCoords({1, 1}));
   }
 }
 

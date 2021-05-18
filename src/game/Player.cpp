@@ -25,11 +25,12 @@ void Player::Update() {
     dir.x /= dir_len, dir.y /= dir_len;
 
     SetPosition(sprite_.getPosition() + dir * move_speed);
-    coords_ = grid_.ToGridCoords(sprite_.getPosition());
   }
+  coords_ = grid_.ToGridCoords(sprite_.getPosition());
 }
 
 void Player::Draw(sf::RenderWindow &window) {
+  /*
   sf::Texture tex(asset::LoadTexture("../assets/texture/perl.png"));
   sf::Image im = tex.copyToImage();
   auto sz = im.getSize();
@@ -44,7 +45,7 @@ void Player::Draw(sf::RenderWindow &window) {
   tex1.loadFromImage(im);
   sf::Sprite sp(tex1);
   sp.setPosition(100, 100);
-  window.draw(sp);
+  window.draw(sp);*/
 
   Object::Draw(window);
 
