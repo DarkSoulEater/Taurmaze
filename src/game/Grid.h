@@ -7,6 +7,7 @@
 #include "settings.h"
 #include <map>
 #include "Buff.h"
+#include <set>
 
 class Grid;
 
@@ -32,7 +33,10 @@ public:
     bool visibility = 0;
     bool on_way = 0;
     bool on_mouse = 0;
+    std::set<int> undiscovered;
   } state_;
+
+  int turn_ = 0;
 
  private:
   sf::RectangleShape shadow_shape_;
@@ -44,6 +48,7 @@ struct LevelOption {
   unsigned int seed = 0;
 
   uint32_t player_count = 2;
+  uint32_t bot_count = 1;
 };
 
 class Grid : public Object {
@@ -65,7 +70,9 @@ public:
 
   void NextTurn();
 
-  void ToBattle(int ind_first_pl, int ind_second_pl);
+  void ToBattle(int first, int second);
+
+  void KillPlayer(int i);
 
  private:
   sf::Vector2i scale_ = {int(settings::CellSize), int(settings::CellSize)};

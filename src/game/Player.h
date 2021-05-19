@@ -11,6 +11,8 @@ class Player : public Object {
 
   void Update() override;
 
+  void LastUpdate() override;
+
   void Draw(sf::RenderWindow &) override;
 
   void SetPosition(const sf::Vector2f &position) override;
@@ -41,6 +43,8 @@ class Player : public Object {
 
   void SetVision(int new_vision);
 
+  void SetDrawable(bool);
+
   sf::Vector2i GetCoords();
  private:
   int health_points_ = 10;
@@ -52,8 +56,9 @@ class Player : public Object {
   Grid& grid_;
 
   std::vector<sf::Vector2f> targets_;
-  float move_speed = 0.5f;
+  float move_speed = 2.0f;
   sf::Vector2i coords_ = {0, 0 };
+  bool draw_sprite = 1;
 };
 
 #endif //TAURMAZE_SRC_GAME_PLAYER_H_

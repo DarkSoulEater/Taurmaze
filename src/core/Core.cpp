@@ -47,31 +47,6 @@ void Core::HandleEvent() {
 }
 #include "../util/asset.h"
 void Core::DrawFrame() {
-  if (input::GetKeyDown(input::KeyCode::E)) {
-    sf::RenderTexture texture;
-    texture.create(1920, 1080);
-    texture.clear(sf::Color::Black);
-
-    texture.setView(texture.getDefaultView());
-    bool view_flag = false;
-
-    for (auto obj: Object::buffer_) {
-      if (view_flag == false && obj.first >= 0 && obj.first < 10) {
-        texture.setView(main_camera);
-        view_flag = true;
-      }
-      if (view_flag && obj.first >= 10) {
-        view_flag = false;
-        texture.setView(texture.getDefaultView());
-      }
-      obj.second->Draw(texture);
-    }
-    texture.display();
-    sf::Texture tex = texture.getTexture();
-    sf::Image image = tex.copyToImage();
-    image.saveToFile("../assets/texture/wind.png");
-  }
-
   window_.clear(sf::Color::Black);
 
   window_.setView(window_.getDefaultView());
@@ -114,9 +89,10 @@ void Core::UpdateScene() {
     case Scene::GAME: {
       Grid* grid = new Grid();
       grid->CreateLevel({
-        .width = 20,
-        .height = 15,
-        .seed = 0
+        .width = 25,
+        .height = 20,
+        .seed = 10,
+        .player_count = 2
       });
       break;
     }

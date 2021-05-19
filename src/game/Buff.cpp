@@ -96,7 +96,7 @@ void Buff::SetPosition(sf::Vector2f position) {
 }
 
 void Buff::Apply(Player& obj) {
-  bf_DefaultEffect(obj);
+  effect_(obj);
   // TODO CALLBACK
 }
 

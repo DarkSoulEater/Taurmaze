@@ -28,6 +28,10 @@ void Player::Update() {
   }
 }
 
+void Player::LastUpdate() {
+  draw_sprite = false;
+}
+
 void Player::Draw(sf::RenderWindow &window) {
   /*
   sf::Texture tex(asset::LoadTexture("../assets/texture/perl.png"));
@@ -45,8 +49,7 @@ void Player::Draw(sf::RenderWindow &window) {
   sf::Sprite sp(tex1);
   sp.setPosition(100, 100);
   window.draw(sp);*/
-
-  Object::Draw(window);
+  if (draw_sprite) Object::Draw(window);
 
   if (settings::DDrawPlayerOrigin) {
     sf::CircleShape circle_shape;
@@ -118,4 +121,8 @@ void Player::SetVision(int new_vision) {
 
 sf::Vector2i Player::GetCoords() {
   return coords_;
+}
+
+void Player::SetDrawable(bool f) {
+  draw_sprite = f;
 }
