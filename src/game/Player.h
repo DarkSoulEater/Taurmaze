@@ -13,6 +13,10 @@ class Player : public Object {
 
   void LastUpdate() override;
 
+  void OnMouseOver() override;
+
+  void OnMouseExit() override;
+
   void Draw(sf::RenderWindow &) override;
 
   void SetPosition(const sf::Vector2f &position) override;
@@ -47,11 +51,11 @@ class Player : public Object {
 
   sf::Vector2i GetCoords();
  private:
-  int health_points_ = 10;
-  int attack_ = 10;
+  int health_points_ = 3;
+  int attack_ = 1;
   int defence_ = 5;
   int move_range_ = 3;
-  int vision_range_ = 3;
+  int vision_range_ = 4;
 
   Grid& grid_;
 
@@ -59,6 +63,8 @@ class Player : public Object {
   float move_speed = 2.0f;
   sf::Vector2i coords_ = {0, 0 };
   bool draw_sprite = 1;
+
+  bool draw_info_ = false;
 };
 
 #endif //TAURMAZE_SRC_GAME_PLAYER_H_

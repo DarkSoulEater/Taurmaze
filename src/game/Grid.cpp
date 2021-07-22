@@ -2,7 +2,7 @@
 #include <vector>
 #include <queue>
 #include <map>
-#include <unordered_map>
+#include <set>
 #include "Grid.h"
 #include "maze.h"
 #include "../util/input.h"
@@ -24,6 +24,9 @@ Cell::Cell(int x, int y, Grid& grid)
   shadow_shape_.setOrigin(settings::CellSize / 2, settings::CellSize / 2);
   shadow_shape_.setPosition(sprite_.getPosition());
   shadow_shape_.setFillColor(sf::Color(0, 0, 0, 180));
+
+  on_way.setTexture(asset::LoadTexture(asset::path::t_OnWayCell));
+  on_way.setOrigin(settings::CellSize / 2, settings::CellSize / 2);
 }
 
 void Cell::Draw(sf::RenderWindow & window) {
@@ -35,10 +38,10 @@ void Cell::Draw(sf::RenderWindow & window) {
   } else {
     if (buff_ && !settings::DAlwaysDrawBuffs) buff_->Draw(window);
     if (state_.on_way) {
-      //SetTexture();
+      window.draw(on_way);
     }
     if (state_.on_mouse) {
-      //SetTexture("../assets/texture/default_select_cell.png");
+
     }
   }
 
@@ -48,6 +51,7 @@ void Cell::Draw(sf::RenderWindow & window) {
 void Cell::SetPosition(const sf::Vector2f &position) {
   Object::SetPosition(position);
   shadow_shape_.setPosition(position);
+  on_way.setPosition(sprite_.getPosition());
 }
 
 void Cell::LastUpdate() {
@@ -61,6 +65,13 @@ void Cell::CreateBuff(BuffType type) {
   buff_->SetPosition(sprite_.getPosition());
 }
 
+namespace sf {
+bool operator<(sf::Vector2i a, sf::Vector2i b) {
+  if (a.x != b.x) return a.x < b.x;
+  return a.y < b.y;
+}
+}
+
 void Grid::Update() {
   for (auto cell: cells_) {
     cell->turn_ = turn_;
@@ -68,7 +79,6 @@ void Grid::Update() {
 
   // Apply Buff
   Cell* player_cell = GetCell(players_[turn_]->GetCoords());
-  //if (player_cell == nullptr) for(;;);
   if (player_cell && player_cell->buff_) {
     player_cell->buff_->Apply(*players_[turn_]);
     delete player_cell->buff_;
@@ -77,36 +87,40 @@ void Grid::Update() {
 
   // Battle
   for (int i = 0; i < players_.size(); ++i) {
-    if (i == turn_) continue;
+    if (!players_[i] || i == turn_) continue;
     if (players_[i]->GetCoords() == players_[turn_]->GetCoords()) {
       ToBattle(turn_, i);
+      return;
     }
   }
 
+  // Cell under mouse
+  auto cell_mouse = GetCell(ToGridCoords(input::GetMouseWorldPosition()));
+  if (cell_mouse) cell_mouse->state_.on_mouse = true;
+
+  // Player logic
   if (!is_bot_[turn_]) {
     players_[turn_]->SetDrawable(true);
     Select();
 
     for (int i = 0; i < players_.size(); ++i) {
-      if (i == turn_) continue;
+      if (!players_[i] || i == turn_) continue;
       auto pos = players_[i]->GetCoords();
       if (abs(pos.x - players_[turn_]->GetCoords().x) + abs(pos.y - players_[turn_]->GetCoords().y) <= players_[turn_]->GetVision()) {
         players_[i]->SetDrawable(true);
       }
     }
 
-    static bool Moved = false;
     if (!players_[turn_]->InMove()) {
-      if (Moved) {
-        Moved = false;
-        NextTurn();
-      }
-
-      if (input::GetKeyDown(input::KeyCode::MOUSE_0)) {
-        sf::Vector2i target = ToGridCoords(input::GetMouseWorldPosition());
-        auto way = GetWay(players_[turn_]->GetCoords(), target);
-        if (!way.empty() && way.size() <= players_[turn_]->GetMoveRange()) {
-          Moved = true;
+      sf::Vector2i target = ToGridCoords(input::GetMouseWorldPosition());
+      auto way = GetWay(players_[turn_]->GetCoords(), target);
+      if (!way.empty() && way.size() <= move_range_) {
+        for (auto& cell_coords : way) {
+          auto cell = GetCell(cell_coords);
+          if (cell) cell->state_.on_way = true;
+        }
+        if (input::GetKeyDown(input::KeyCode::MOUSE_0)) {
+          move_range_ -= way.size();
           std::vector<sf::Vector2f> targets;
           for (auto point : way) {
             targets.push_back(ToWorldCoords(point));
@@ -114,16 +128,121 @@ void Grid::Update() {
           players_[turn_]->SetTargets(targets);
         }
       }
-    } else {
 
+      if (input::GetKeyDown(input::KeyCode::SPACE)) {
+        NextTurn();
+      }
     }
   } else {
-    NextTurn();
-  }
+    // Bot logic
+    if (settings::DDrawBotTurn) {
+      players_[turn_]->SetDrawable(true);
+      Select();
 
-  // TMP
-  auto cell = GetCell(ToGridCoords(input::GetMouseWorldPosition()));
-  if (cell) cell->state_.on_mouse = true;
+      for (int i = 0; i < players_.size(); ++i) {
+        if (!players_[i] || i == turn_) continue;
+        auto pos = players_[i]->GetCoords();
+        if (abs(pos.x - players_[turn_]->GetCoords().x) + abs(pos.y - players_[turn_]->GetCoords().y) <= players_[turn_]->GetVision()) {
+          players_[i]->SetDrawable(true);
+        }
+      }
+    }
+
+    if (!players_[turn_]->InMove()) {
+      if (move_range_ == 0) {
+        NextTurn();
+        return;
+      }
+
+      std::set<std::pair<int, sf::Vector2i>> targets;
+      sf::Vector2i pl_pos = players_[turn_]->GetCoords();
+
+      int buff_point = 10;
+      int strong_player_point = -1000;
+      int weak_player_point = 1000;
+      int fear_range = 10;
+      int undisc = 10;
+
+      std::set<sf::Vector2i> strong_players;
+      std::set<sf::Vector2i> weak_players;
+      for (int i = 0; i < players_.size(); ++i) {
+        if (!players_[i] || i == turn_) continue;
+        auto pos = players_[i]->GetCoords();
+        if (abs(pos.x - players_[turn_]->GetCoords().x) + abs(pos.y - players_[turn_]->GetCoords().y) <= players_[turn_]->GetVision()) {
+          if (ToBattle(turn_, i, false) == i) weak_players.insert(pos);
+          else strong_players.insert(pos);
+        }
+      }
+
+      int view_range = players_[turn_]->GetVision() + 2;
+      std::map<sf::Vector2i, int> points;
+
+      for (int y = -view_range; y <= view_range; ++y) {
+        for (int x = -view_range; x <= view_range; ++x) {
+          auto way = GetWay(players_[turn_]->GetCoords(), pl_pos + sf::Vector2i(x, y));
+          if (way.empty()) continue;
+
+          int point = 0;
+
+          auto cell = GetCell(pl_pos + sf::Vector2i(x, y));
+          if (!cell) continue;
+
+          if (cell->state_.undiscovered.count(turn_) == 0) {
+            point += undisc;
+          }
+
+          if (cell->buff_) {
+            point += buff_point - abs(x) - abs(y);
+          }
+
+          if (weak_players.count(pl_pos + sf::Vector2i(x, y))) {
+            point += weak_player_point - abs(x) - abs(y);
+          }
+
+          if (strong_players.count(pl_pos + sf::Vector2i(x, y))) {
+            point += strong_player_point;
+          }
+
+          if (!strong_players.empty()) {
+            point += (abs(pl_pos.x + x - strong_players.begin()->x)
+                + abs(pl_pos.y + y - strong_players.begin()->y))
+                * fear_range;
+          }
+
+          for (auto p : way) {
+            points[p] += point;
+          }
+        }
+      }
+
+      for (const auto& p : points) {
+        if (p.first == pl_pos + sf::Vector2i(0, 1)
+        || p.first == pl_pos + sf::Vector2i(0, -1)
+        || p.first == pl_pos + sf::Vector2i(1, 0)
+        || p.first == pl_pos + sf::Vector2i(-1, 0))
+          targets.insert({p.second, p.first});
+      }
+
+      std::cout << targets.rbegin()->second.x << " " << targets.rbegin()->second.x << std::endl;
+      auto way = GetWay(players_[turn_]->GetCoords(), targets.rbegin()->second);
+
+      if (!way.empty() && way.size() <= move_range_) {
+          move_range_ -= way.size();
+          //if (move_range_ < 0) move_range_ = 0;
+          std::vector<sf::Vector2f> targets;
+          //for (int i = std::min(int(move_range_ - 1), int(targets.size() - 1)); i >= 0; --i) {
+          //  targets.push_back(ToWorldCoords(way[i]));
+          //}
+          for (auto point : way) {
+            targets.push_back(ToWorldCoords(point));
+            //if (targets.size() == move_range_) break;
+          }
+          players_[turn_]->SetTargets(targets);
+      } else {
+        std::cerr << "Error: not corect target cell for bot\n";
+      }
+    }
+  }
 }
 
 void Grid::Draw(sf::RenderWindow &window) {
@@ -204,6 +323,10 @@ void Grid::CreateLevel(LevelOption option) {
   // Create bot
   for (size_t i = 0; i < option.bot_count; ++i) {
     Player* player = new Player(*this);
+    player->SetTexture(asset::path::t_Minotaur);
+    player->SetTextureRect(sf::IntRect(0,0,130,100));
+    player->SetSize(settings::HeroesSize, settings::HeroesSize);
+    player->SetHealthPoints(10);
     players_.push_back(player);
     is_bot_.push_back(true);
     player->SetPosition(ToWorldCoords({0, 0}));
@@ -227,6 +350,8 @@ void Grid::CreateLevel(LevelOption option) {
       } while(maze_[player->GetCoords().y][player->GetCoords().x] == 0);
     }
   }
+
+  move_range_ = players_[turn_]->GetMoveRange();
 }
 
 void Grid::DestroyLevel() {
@@ -325,18 +450,37 @@ void Grid::Select() {
 }
 
 void Grid::NextTurn() {
-  turn_ = (turn_ + 1) % players_.size();
+  do {
+    turn_ = (turn_ + 1) % players_.size();
+  } while (!players_[turn_]);
+  move_range_ = players_[turn_]->GetMoveRange();
 }
 
-void Grid::ToBattle(int first, int second) {
-  // TODO: ADD BATTLE // DELETE IN PLAYERS_!!!
-  std::cout << "Battle " << first << " " << second << std::endl;
-  KillPlayer(second);
+int Grid::ToBattle(int first, int second, bool kill) {
+  int first_health = players_[first]->GetHealthPoints();
+  int second_health = players_[second]->GetHealthPoints();
+  int first_attack = players_[first]->GetAttack();
+  int second_attack = players_[second]->GetAttack();
+  int kill_id = second;
+  for (;;) {
+    second_health -= first_attack;
+    if (second_health <= 0) {
+      kill_id = second;
+      break;
+    }
 
+    first_health -= second_attack;
+    if (first_health <= 0) {
+      kill_id = first;
+      break;
+    }
+  }
+ if (kill) KillPlayer(kill_id);
+ return kill_id;
 }
 
 void Grid::KillPlayer(int i) {
   delete players_[i];
-  players_.erase(players_.begin() + i);
-  is_bot_.erase(is_bot_.begin() + i);
+  players_[i] = nullptr;
+  if (i == turn_) NextTurn();
 }

@@ -62,7 +62,7 @@ void Object::Draw(sf::RenderWindow &window) {
   window.draw(sprite_);
 }
 
-void Object::SetSpritePosition(const sf::Vector2f &position) {
-  sprite_.setPosition(position);
+void Object::SetSize(float width, float height) {
+  auto texture_size = sprite_.getTextureRect();
+  sprite_.setScale({width / texture_size.width, height / texture_size.height});
 }
-

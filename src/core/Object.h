@@ -57,7 +57,7 @@ class Object {
     texture.draw(sprite_);
   }
 
-  virtual void SetSpritePosition(const sf::Vector2f& position);
+  virtual void SetSize(float width, float height);
 
 protected:
   int level_;

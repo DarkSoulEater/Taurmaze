@@ -8,8 +8,9 @@ namespace settings {
   int BuffQuantity = 300;
 
 // Debug
-  bool IsDebug = true;
+  bool IsDebug = false;
   bool DDrawCoordsGrid = false && IsDebug;
   bool DAlwaysDrawBuffs = true && IsDebug;
   bool DDrawPlayerOrigin = true && IsDebug;
+  bool DDrawBotTurn = false;
 } // namespace

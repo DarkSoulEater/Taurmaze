@@ -90,9 +90,10 @@ void Core::UpdateScene() {
       Grid* grid = new Grid();
       grid->CreateLevel({
         .width = 25,
-        .height = 20,
-        .seed = 10,
-        .player_count = 2
+        .height = 25,
+        .seed = 100,
+        .player_count = 1,
+        .bot_count = 1
       });
       break;
     }

@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Grid.h"
 #include "../util/asset.h"
+#include "../util/input.h"
 
 Player::Player(Grid& grid) : Object("../assets/texture/purple_slime.png", 5), grid_(grid) {
   coords_ = grid_.ToGridCoords(sprite_.getPosition());
@@ -33,23 +34,16 @@ void Player::LastUpdate() {
 }
 
 void Player::Draw(sf::RenderWindow &window) {
-  /*
-  sf::Texture tex(asset::LoadTexture("../assets/texture/perl.png"));
-  sf::Image im = tex.copyToImage();
-  auto sz = im.getSize();
-  for (size_t j = 0; j < sz.y; ++j) {
-    for (size_t i = 0; i < sz.x; ++i) {
-      sf::Color col(im.getPixel(i, j));
-      col.a = 100;
-      im.setPixel(i, j, col * sf::Color(255, 238, 204));
-    }
-  }
-  sf::Texture tex1;
-  tex1.loadFromImage(im);
-  sf::Sprite sp(tex1);
-  sp.setPosition(100, 100);
-  window.draw(sp);*/
   if (draw_sprite) Object::Draw(window);
+
+  if (draw_info_) {
+    sf::CircleShape circle_shape;
+    circle_shape.setRadius(20);
+    circle_shape.setOrigin({5, 5});
+    circle_shape.setFillColor(sf::Color::Red);
+    circle_shape.setPosition(grid_.ToWorldCoords(coords_));
+    window.draw(circle_shape);
+  }
 
   if (settings::DDrawPlayerOrigin) {
     sf::CircleShape circle_shape;
@@ -125,4 +119,16 @@ sf::Vector2i Player::GetCoords() {
 
 void Player::SetDrawable(bool f) {
   draw_sprite = f;
+}
+
+void Player::OnMouseOver() {
+  if (input::GetKey(input::KeyCode::LEFT_SHIFT)) {
+    draw_info_ = true;
+  } else {
+    draw_info_ = false;
+  }
+}
+
+void Player::OnMouseExit() {
+  draw_info_ = false;
 }

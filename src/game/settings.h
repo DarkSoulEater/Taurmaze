@@ -12,6 +12,7 @@ extern bool IsDebug;
 extern bool DDrawCoordsGrid;
 extern bool DAlwaysDrawBuffs;
 extern bool DDrawPlayerOrigin;
+extern bool DDrawBotTurn;
 }; // namespace
 
 #endif //TAURMAZE_SRC_GAME_SETTINGS_H_

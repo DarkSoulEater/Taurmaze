@@ -40,6 +40,7 @@ public:
 
  private:
   sf::RectangleShape shadow_shape_;
+  sf::Sprite on_way;
 };
 
 struct LevelOption {
@@ -70,7 +71,7 @@ public:
 
   void NextTurn();
 
-  void ToBattle(int first, int second);
+  int ToBattle(int first, int second, bool kill = 1);
 
   void KillPlayer(int i);
 
@@ -82,6 +83,7 @@ public:
   std::vector<std::vector<int>> maze_;
 
   uint32_t turn_ = 0;
+  uint32_t move_range_ = 0;
   std::vector<Player*> players_;
   std::vector<bool> is_bot_;
 
